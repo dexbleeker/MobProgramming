@@ -30,10 +30,21 @@ class Client:
         """The id of the client"""
         return self.client_id
 
-    def encrypt(self):
+    def encrypt(self, message):
+        consultant_public_key = self.server.consultant_public_key()
+
         x = random.randrange(start=1, stop=self.prime - 1)
         y = random.randrange(start=1, stop=self.prime - 1)
         u = pow(self.generator, x, self.prime)
 
-    def decrypt():
+        vs = []
+        for key in [consultant_public_key, self.y_a]:
+            v = pow(key * y % self.prime, x, self.prime)
+            vs.append(v)
+
+        c = (pow(y, x, int(self.prime)) * message) % int(self.prime)
+
+        return [c, u, *vs]
+
+    def decrypt(self):
         pass

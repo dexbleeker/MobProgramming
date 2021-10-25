@@ -9,8 +9,11 @@ def main():
     server = Server()
     # Create random amount of clients
     for client_id in range(random.randrange(4, 8)):
-        Client(server, client_id)
-    # x_a, y_a = setup(server.prime, server.generator)
+        c = Client(server, client_id)
+
+    print("Encryption:")
+    print(str(c.encrypt(12)))
+    print("Done")
 
 
 if __name__ == "__main__":
