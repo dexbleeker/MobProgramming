@@ -9,11 +9,16 @@ def main():
     server = Server()
     # Create random amount of clients
     for client_id in range(random.randrange(4, 8)):
-        c = Client(server, client_id)
+        Client(server, client_id)
 
-    print("Encryption:")
-    print(str(c.encrypt(12)))
-    print("Done")
+    # print("Encryption:")
+    # sigma = c.encrypt(12)
+    # print(str(sigma))
+    # print("Done")
+    #
+    # print("Decryption:")
+    # print(str(c.decrypt(sigma)))
+    # print("Done")
 
 
 if __name__ == "__main__":
