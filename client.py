@@ -30,7 +30,7 @@ class Client:
         """The id of the client"""
         return self.client_id
 
-    def encrypt(self, message):
+    def encrypt(self, message, user_id=0):
         NotImplementedError("Class %s doesn't implement encrypt()" % self.__class__.__name__)
 
     def decrypt(self, sigma):

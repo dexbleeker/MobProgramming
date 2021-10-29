@@ -18,10 +18,8 @@ class Server:
     def register_user(self, client_id, public_key):
         self.users[client_id] = public_key
 
-    def consultant_public_key(self):
-        consultant = self.users[0]
-        assert consultant  # its id == 0
-        return consultant
+    def user_public_key(self, user_id):
+        return self.users[user_id]
 
     # TODO: Evaluate trapdoor
     def evaluate_trapdoor(self):

@@ -1,7 +1,7 @@
 import random
 
 from consultant import Consultant
-from normal_client import User
+from user import User
 from server import Server
 
 
@@ -9,18 +9,22 @@ def main():
     # Single server instance
     server = Server()
     # Create consultant
-    Consultant(server)
+    consultant = Consultant(server)
     # Create random amount of users
+    users = []
     for client_id in range(1, random.randrange(4, 8)):
-        user = User(server, client_id)
+        users.append(User(server, client_id))
 
+    print(users[-1].client_id)
     print("Encryption:")
-    sigma = user.encrypt(12)
+    sigma = users[-1].encrypt(12)
+    # sigma = consultant.encrypt(12, users[-1].client_id)
     print(str(sigma))
     print("Done")
 
     print("Decryption:")
-    print(str(user.decrypt(sigma)))
+    # print(str(users[-1].decrypt(sigma)))
+    print(str(consultant.decrypt(sigma)))
     print("Done")
 
 
