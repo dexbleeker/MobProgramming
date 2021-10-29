@@ -51,6 +51,12 @@ class Test(unittest.TestCase):
 
         self.assertNotEqual(message, decrypted)
 
+    def test_ids(self):
+        """
+        Consultant id should be 0 and user ids should not be 0
+        """
+        self.assertEqual(self.consultant.client_id(), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

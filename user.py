@@ -15,7 +15,7 @@ class User(Client):
         u = pow(self.generator, x, self.prime)
 
         vs = []
-        for key in [consultant_public_key, self.y_a]:
+        for key in [consultant_public_key, self.y_a()]:
             v = pow(key * y % self.prime, x, self.prime)
             vs.append(v)
 
@@ -28,7 +28,7 @@ class User(Client):
         u = sigma[1]
         v = sigma[-1]
 
-        divisor = int(pow(int(u), int(self.x_a), int(self.prime)))
+        divisor = int(pow(int(u), int(self.x_a()), int(self.prime)))
         k = pow(divisor, -1, int(self.prime)) * int(v)
 
         m = pow(int(k), -1, int(self.prime)) * int(c) % int(self.prime)

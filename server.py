@@ -21,6 +21,30 @@ class Server:
     def user_public_key(self, user_id):
         return self.users[user_id]
 
-    # TODO: Evaluate trapdoor
-    def evaluate_trapdoor(self):
-        pass
+    def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
+        print("Starting evaluating trapdoor")
+        tjq1, tjq2, tjq3, indices = trapdoor
+        a, bs, cs = m_peck
+
+        left = tjq1
+        for i in indices:
+            left = (left * cs[i]) % int(self.prime)
+        print("Done with left")
+
+        right1 = a
+        for i in tjq2:
+            right1 = (right1 * i) % int(self.prime)
+        print("Done with right1")
+
+        right2 = bs[user_id]
+        for i in tjq3:
+            right2 = (right2 * i) % int(self.prime)
+        print("Done with right2")
+
+        right = right1 * right2 % int(self.prime)
+
+        print("Left: {}".format(left))
+        print("Right: {}".format(right))
+
+        print("result: {}".format(left == right))
+        return left == right
