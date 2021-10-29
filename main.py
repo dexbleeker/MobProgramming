@@ -18,13 +18,14 @@ def main():
     print(users[-1].client_id)
     print("Encryption:")
     sigma = users[-1].encrypt(12)
+    unit = users[-1].m_peck(['transfer', 'withdrawal', 'private', 'imbrokeasfuck'])
     # sigma = consultant.encrypt(12, users[-1].client_id)
     print(str(sigma))
     print("Done")
 
     print("Decryption:")
     # print(str(users[-1].decrypt(sigma)))
-    print(str(consultant.decrypt(sigma)))
+    # print(str(consultant.decrypt(sigma)))
     print("Done")
 
 

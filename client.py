@@ -1,3 +1,4 @@
+import math
 import random
 import mmh3
 
@@ -31,16 +32,16 @@ class Client:
         """The id of the client"""
         return self.client_id
 
-    def mpeck(self, keyword_set):
-        h = [mmh3.hash(x, 0) for x in keyword_set]
-        f = [mmh3.hash(x, 1) for x in keyword_set]
+    def m_peck(self, keyword_set):
+        h = [mmh3.hash(x, 0) % int(self.prime) for x in keyword_set]
+        f = [mmh3.hash(x, 1) % int(self.prime) for x in keyword_set]
 
         s = random.randrange(start=1, stop=self.prime - 1)
         r = random.randrange(start=1, stop=self.prime - 1)
 
         a = pow(self.generator, r, self.prime)
-        bs = [pow(key, s) for key in [self.y_a, self.server.user_public_key(0)]]
-        cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
+        bs = [pow(key, s, int(self.prime)) for key in [self.y_a, self.server.user_public_key(0)]]
+        cs = [pow(h[i], r, int(self.prime)) * pow(f[i], s, int(self.prime)) for i in range(len(h))]
 
         return [a, *bs, *cs]
 
