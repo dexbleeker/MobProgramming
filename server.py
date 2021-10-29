@@ -29,19 +29,16 @@ class Server:
         left = tjq1
         for i in indices:
             left = (left * cs[i]) % int(self.prime)
-        print("Done with left")
 
         right1 = a
         for i in tjq2:
             right1 = (right1 * i) % int(self.prime)
-        print("Done with right1")
 
         right2 = bs[user_id]
         for i in tjq3:
             right2 = (right2 * i) % int(self.prime)
-        print("Done with right2")
 
-        right = right1 * right2 % int(self.prime)
+        right = (right1 * right2) % int(self.prime)
 
         print("Left: {}".format(left))
         print("Right: {}".format(right))

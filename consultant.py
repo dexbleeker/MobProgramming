@@ -28,7 +28,7 @@ class Consultant(Client):
         u = sigma[1]
         v = sigma[-2]
 
-        divisor = int(pow(int(u), int(self.x_a), int(self.prime)))
+        divisor = int(pow(int(u), int(self.x_a()), int(self.prime)))
         k = pow(divisor, -1, int(self.prime)) * int(v)
 
         m = pow(int(k), -1, int(self.prime)) * int(c) % int(self.prime)

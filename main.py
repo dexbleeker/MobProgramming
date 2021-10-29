@@ -15,6 +15,10 @@ def main():
     for client_id in range(1, 2):
         users.append(User(server, client_id))
 
+    assert len(users) == 1
+    assert users[0].client_id() == 1
+    assert consultant.client_id() == 0
+
     print(users[-1].client_id)
     print("Encryption:")
     sigma = users[-1].encrypt(12)

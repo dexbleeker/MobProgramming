@@ -56,6 +56,8 @@ class Test(unittest.TestCase):
         Consultant id should be 0 and user ids should not be 0
         """
         self.assertEqual(self.consultant.client_id(), 0)
+        for u in self.users:
+            self.assertNotEqual(u.client_id(), 0)
 
 
 if __name__ == '__main__':
