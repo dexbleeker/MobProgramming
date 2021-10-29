@@ -1,5 +1,5 @@
-import math
 import random
+
 import mmh3
 
 
@@ -44,6 +44,18 @@ class Client:
         cs = [pow(h[i], r, int(self.prime)) * pow(f[i], s, int(self.prime)) for i in range(len(h))]
 
         return [a, *bs, *cs]
+
+    def evaluate_trapdoor(self, indices, keyword_set):
+        t = random.randrange(start=1, stop=self.prime - 1)
+        tjq1 = pow(self.generator, t, self.prime)
+        print("tjq1: {}".format(tjq1))
+        tjq2 = [pow(mmh3.hash(keyword, 0), t) for keyword in keyword_set]
+        print("tjq2: {}".format(tjq2))
+        inverse = pow(self.x_a, -1, int(self.prime))
+        tjq3 = [pow(mmh3.hash(keyword, 1), inverse * t, self.prime) for keyword in keyword_set]
+        print("tjq3: {}".format(tjq3))
+
+        return [tjq1, tjq2, tjq3, *indices]
 
     def encrypt(self, message, user_id=0):
         NotImplementedError("Class %s doesn't implement encrypt()" % self.__class__.__name__)
