@@ -14,7 +14,7 @@ class Test(unittest.TestCase):
         for client_id in range(1, random.randrange(4, 8)):
             self.users.append(User(self.server, client_id))
 
-    def test_enc_user(self):
+    def test_user(self):
         """
         User should be able to decrypt his own ciphertext
         """
@@ -25,7 +25,7 @@ class Test(unittest.TestCase):
 
         self.assertEqual(message, decrypted)
 
-    def test_enc_consultant(self):
+    def test_consultant(self):
         """
         Consultant should be able to decrypt users ciphertext
         """
@@ -35,6 +35,21 @@ class Test(unittest.TestCase):
         decrypted = self.consultant.decrypt(sigma)
 
         self.assertEqual(message, decrypted)
+
+    def test_different_user(self):
+        """
+        Different user should NOT be able to decrypt users ciphertext
+        """
+        user1 = random.choice(self.users)
+        user2 = random.choice(self.users)
+        while user1 == user2:
+            user2 = random.choice(self.users)
+
+        message = 61298741
+        sigma = user1.encrypt(message)
+        decrypted = user2.decrypt(sigma)
+
+        self.assertNotEqual(message, decrypted)
 
 
 if __name__ == '__main__':
