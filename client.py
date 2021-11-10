@@ -28,7 +28,6 @@ class Client:
         return self.__cid
 
     def m_peck(self, keyword_set):
-        print("keywords: {}".format(keyword_set))
         h = [mmh3.hash(x, 0, signed=False) % self.prime for x in keyword_set]
         f = [mmh3.hash(x, 1, signed=False) % self.prime for x in keyword_set]
 
@@ -41,24 +40,22 @@ class Client:
 
         return [a, bs, cs], h, f
 
-    def generate_trapdoor(self, m_peck, h, f, indices, keyword_set):
-        # m_peck, h, f are temporary (?) to check whether the hashes are the same.
-
+    def generate_trapdoor(self, indices, keyword_set):
         t = random.randrange(start=1, stop=self.prime - 1)
         tjq1 = pow(self.generator, t, self.prime)
         print("tjq1: {}".format(tjq1))
 
-        for i in range(len(keyword_set)):
-            print(keyword_set[i])
-            print("{} - {}".format(mmh3.hash(keyword_set[i], 0, signed=False), h[i]))
-            assert mmh3.hash(keyword_set[i], 0, signed=False) == h[i]
+        # for i in range(len(keyword_set)):
+        #     print(keyword_set[i])
+        #     print("{} - {}".format(mmh3.hash(keyword_set[i], 0, signed=False), h[i]))
+        #     assert mmh3.hash(keyword_set[i], 0, signed=False) == h[i]
 
         tjq2 = [pow(mmh3.hash(keyword, 0, signed=False) % self.prime, t, self.prime) for keyword in keyword_set]
         print("tjq2: {}".format(tjq2))
 
-        for i in range(len(keyword_set)):
-            print("{} - {}".format(mmh3.hash(keyword_set[i], 1, signed=False), f[i]))
-            assert mmh3.hash(keyword_set[i], 1, signed=False) == f[i]
+        # for i in range(len(keyword_set)):
+        #     print("{} - {}".format(mmh3.hash(keyword_set[i], 1, signed=False), f[i]))
+        #     assert mmh3.hash(keyword_set[i], 1, signed=False) == f[i]
 
         inverse = pow(self.x_a(), -1, self.prime)
         tjq3 = [pow(mmh3.hash(keyword, 1, signed=False) % self.prime, inverse * t, self.prime) for keyword in keyword_set]
