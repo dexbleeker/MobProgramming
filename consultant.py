@@ -19,7 +19,7 @@ class Consultant(Client):
             v = pow(key * y % self.prime, x, self.prime)
             vs.append(v)
 
-        c = (pow(y, x, int(self.prime)) * message) % int(self.prime)
+        c = (pow(y, x, self.prime) * message) % self.prime
 
         return [c, u, *vs]
 
@@ -28,8 +28,8 @@ class Consultant(Client):
         u = sigma[1]
         v = sigma[-2]
 
-        divisor = int(pow(int(u), int(self.x_a()), int(self.prime)))
-        k = pow(divisor, -1, int(self.prime)) * int(v)
+        divisor = int(pow(int(u), int(self.x_a()), self.prime))
+        k = pow(divisor, -1, self.prime) * int(v)
 
-        m = pow(int(k), -1, int(self.prime)) * int(c) % int(self.prime)
+        m = pow(int(k), -1, self.prime) * int(c) % self.prime
         return m
