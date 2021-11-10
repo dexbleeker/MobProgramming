@@ -31,12 +31,12 @@ class Server:
             left = (left * cs[i]) % self.prime
 
         right1 = a
-        for i in tjq2:
-            right1 = (right1 * i) % self.prime
+        for i in indices:
+            right1 = (right1 * tjq2[i]) % self.prime
 
         right2 = bs[user_id]
-        for i in tjq3:
-            right2 = (right2 * i) % self.prime
+        for i in indices:
+            right2 = (right2 * tjq3[i]) % self.prime
 
         right = (right1 * right2) % self.prime
 
