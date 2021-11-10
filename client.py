@@ -45,17 +45,8 @@ class Client:
         tjq1 = pow(self.generator, t, self.prime)
         print("tjq1: {}".format(tjq1))
 
-        # for i in range(len(keyword_set)):
-        #     print(keyword_set[i])
-        #     print("{} - {}".format(mmh3.hash(keyword_set[i], 0, signed=False), h[i]))
-        #     assert mmh3.hash(keyword_set[i], 0, signed=False) == h[i]
-
         tjq2 = [pow(mmh3.hash(keyword, 0, signed=False) % self.prime, t, self.prime) for keyword in keyword_set]
         print("tjq2: {}".format(tjq2))
-
-        # for i in range(len(keyword_set)):
-        #     print("{} - {}".format(mmh3.hash(keyword_set[i], 1, signed=False), f[i]))
-        #     assert mmh3.hash(keyword_set[i], 1, signed=False) == f[i]
 
         inverse = pow(self.x_a(), -1, self.prime)
         tjq3 = [pow(mmh3.hash(keyword, 1, signed=False) % self.prime, inverse * t, self.prime) for keyword in keyword_set]

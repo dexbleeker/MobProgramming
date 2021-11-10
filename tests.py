@@ -1,3 +1,4 @@
+import base64
 import random
 import unittest
 
@@ -58,6 +59,30 @@ class Test(unittest.TestCase):
         self.assertEqual(self.consultant.client_id(), 0)
         for u in self.users:
             self.assertNotEqual(u.client_id(), 0)
+
+    def test_file(self):
+        """
+        Test whether encryption/decryption of a file works correctly.
+        """
+        user = random.choice(self.users)
+
+        f = open("test-file.txt", "rb")
+        message_bytes = []
+        while (byte := f.read(1)):
+            message_bytes.append(int.from_bytes(bytes=byte, byteorder='big', signed=False))
+        f.close()
+
+        encrypted_bytes = []
+        for byte in message_bytes:
+            eb = user.encrypt(byte)
+            encrypted_bytes.append(eb)
+
+        decrypted_bytes = []
+        for byte in encrypted_bytes:
+            db = user.decrypt(byte)
+            decrypted_bytes.append(db)
+
+        self.assertEqual(message_bytes, decrypted_bytes)
 
     def test_trapdoor(self):
         """
