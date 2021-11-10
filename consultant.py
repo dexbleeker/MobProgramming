@@ -15,7 +15,7 @@ class Consultant(Client):
         u = pow(self.generator, x, self.prime)
 
         vs = []
-        for key in [self.y_a, user_public_key]:
+        for key in [self.y_a(), user_public_key]:
             v = pow(key * y % self.prime, x, self.prime)
             vs.append(v)
 

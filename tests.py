@@ -59,6 +59,21 @@ class Test(unittest.TestCase):
         for u in self.users:
             self.assertNotEqual(u.client_id(), 0)
 
+    def test_trapdoor(self):
+        """
+        Trapdoor evaluation should return True
+        """
+        user = random.choice(self.users)
+
+        message = 24698798
+        m_peck, h, f = user.m_peck(['transfer', 'withdrawal', 'private'])
+        trapdoor = user.generate_trapdoor(m_peck, h, f, [0, 1, 2], ['transfer', 'withdrawal', 'private'])
+
+        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+
+        self.assertTrue(result)
+
+
 
 if __name__ == '__main__':
     unittest.main()
