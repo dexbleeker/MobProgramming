@@ -57,5 +57,32 @@ class Client:
     def encrypt(self, message, user_id=0):
         NotImplementedError("Class %s doesn't implement encrypt()" % self.__class__.__name__)
 
+    def encrypt_file(self, filename, user_id=0):
+        f = open(filename, "rb")
+
+        message_bytes = []
+        while byte := f.read(1):
+            message_bytes.append(int.from_bytes(bytes=byte, byteorder='big', signed=False))
+        f.close()
+
+        encrypted_bytes = []
+        for byte in message_bytes:
+            eb = self.encrypt(byte, user_id)
+            encrypted_bytes.append(eb)
+
+        return encrypted_bytes
+
     def decrypt(self, sigma):
         NotImplementedError("Class %s doesn't implement decrypt()" % self.__class__.__name__)
+
+    def decrypt_file(self, byte_array, filename="result.txt"):
+        decrypted_bytes = []
+        for byte in byte_array:
+            db = self.decrypt(byte)
+            decrypted_bytes.append(db)
+
+        result = open(filename, "wb")
+        result.write(bytes(bytearray(decrypted_bytes)))
+        result.close()
+
+        return filename
