@@ -5,7 +5,7 @@ from Crypto.Random import get_random_bytes
 class Server:
     def __init__(self):
         key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
-        self.prime = key.p
+        self.prime = int(key.p)
         self.generator = key.g
         self.users = {}
 
@@ -34,7 +34,10 @@ class Server:
         for i in indices:
             right1 = (right1 * tjq2[i]) % self.prime
 
-        right2 = bs[user_id]
+        print("bs: {}".format(bs))
+        if user_id != 0:
+            id = 1
+        right2 = int(bs[id])
         for i in indices:
             right2 = (right2 * tjq3[i]) % self.prime
 
@@ -42,6 +45,4 @@ class Server:
 
         print("Left: {}".format(left))
         print("Right: {}".format(right))
-
-        print("result: {}".format(left == right))
         return left == right

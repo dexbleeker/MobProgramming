@@ -11,8 +11,8 @@ class Test(unittest.TestCase):
         self.server = Server()
         self.consultant = Consultant(self.server)
         self.users = []
-        for client_id in range(1, random.randrange(4, 8)):
-            self.users.append(User(self.server, client_id))
+        # for client_id in range(1, random.randrange(4, 8)):
+        self.users.append(User(self.server, 1))
 
     def test_user(self):
         """
@@ -64,9 +64,10 @@ class Test(unittest.TestCase):
         Trapdoor evaluation should return True
         """
         user = random.choice(self.users)
+        assert user.client_id() == 1
 
-        m_peck, h, f = user.m_peck(['transfer', 'withdrawal', 'private'])
-        trapdoor = user.generate_trapdoor([0, 1, 2], ['transfer', 'withdrawal', 'private'])
+        m_peck = user.m_peck(['transfer', 'withdrawal', 'private'])
+        trapdoor = user.generate_trapdoor([0], ['transfer', 'withdrawal', 'private'])
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 

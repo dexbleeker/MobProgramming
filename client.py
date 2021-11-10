@@ -38,7 +38,7 @@ class Client:
         bs = [pow(key, s, self.prime) for key in [self.server.user_public_key(0), self.y_a()]]
         cs = [pow(h[i], r, self.prime) * pow(f[i], s, self.prime) for i in range(len(h))]
 
-        return [a, bs, cs], h, f
+        return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
         t = random.randrange(start=1, stop=self.prime - 1)
