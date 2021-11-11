@@ -5,8 +5,10 @@ from Crypto.Random import get_random_bytes
 class Server:
     def __init__(self):
         key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
-        self.prime = int(key.p)
-        self.generator = key.g
+        # self.prime = int(key.p)
+        # self.generator = key.g
+        self.prime = 23
+        self.generator = 5
         self.users = {}
 
     def prime(self):
@@ -19,12 +21,20 @@ class Server:
         self.users[client_id] = public_key
 
     def user_public_key(self, user_id):
+        """Remember, user_id 0 is the consultant"""
         return self.users[user_id]
 
     def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
         print("Starting evaluating trapdoor")
         tjq1, tjq2, tjq3, indices = trapdoor
         a, bs, cs = m_peck
+
+        if user_id != 0:
+            # If the user id is not 0, get the second (1)
+            # element from bs later
+            id = 1
+
+        print("indices: {}".format(indices))
 
         left = tjq1
         for i in indices:
@@ -34,8 +44,6 @@ class Server:
         for i in indices:
             right1 = (right1 * tjq2[i]) % self.prime
 
-        if user_id != 0:
-            id = 1
         right2 = int(bs[id])
         for i in indices:
             right2 = (right2 * tjq3[i]) % self.prime
@@ -44,9 +52,9 @@ class Server:
 
         print("Left: {}".format(left))
         print("Right: {}".format(right))
-        # return left == right
+        return left == right
 
         # This method is not working correctly yet.
         # To be able to continue with the rest of the assignment,
         # we stub it to True for now.
-        return True
+        # return True
