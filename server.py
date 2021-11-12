@@ -29,10 +29,10 @@ class Server:
         tjq1, tjq2, tjq3, indices = trapdoor
         a, bs, cs = m_peck
 
+        # If the user id is not 0, get the second (1)
+        # element from bs later
         if user_id != 0:
-            # If the user id is not 0, get the second (1)
-            # element from bs later
-            id = 1
+            uid = 1
 
         print("indices: {}".format(indices))
 
@@ -44,7 +44,7 @@ class Server:
         for i in indices:
             right1 = (right1 * tjq2[i]) % self.prime
 
-        right2 = int(bs[id])
+        right2 = int(bs[uid])
         for i in indices:
             right2 = (right2 * tjq3[i]) % self.prime
 
