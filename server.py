@@ -27,7 +27,6 @@ class Server:
         """
         print("Starting evaluating trapdoor")
         tjq1, tjq2, tjq3, indices = trapdoor
-        print("assign")
         a, bs, cs = m_peck
 
         # If the user id is not 0, get the second (1)
@@ -35,7 +34,7 @@ class Server:
         if user_id != 0:
             uid = 1
 
-        print("indices: {}".format(indices))
+        # print("indices: {}".format(indices))
 
         e = lambda e1, e2: self.pairing.apply(e1, e2)
 
@@ -58,6 +57,6 @@ class Server:
 
         right = right1 * right2
 
-        print("Left: {}".format(left))
-        print("Right: {}".format(right))
+        # print("Left: {}".format(left))
+        # print("Right: {}".format(right))
         return left == right

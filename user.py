@@ -33,8 +33,5 @@ class User(Client):
 
         divisor = u ** self.x_a()
         k = v.__ifloordiv__(divisor)
-
-        print("K: {}".format(k))
-
         m = c.__ifloordiv__(k)
         return m

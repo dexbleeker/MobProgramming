@@ -59,16 +59,15 @@ class Client:
         # print("mpeck f: {}".format(f))
 
         tjq1 = pow(self.generator, t)
-        print("tjq1: {}".format(tjq1))
+        # print("tjq1: {}".format(tjq1))
 
         tjq2 = [pow(x, t) for x in h]
-        print("tjq2: {}".format(tjq2))
+        # print("tjq2: {}".format(tjq2))
 
         inverse = t.__ifloordiv__(self.x_a())
         tjq3 = [y ** inverse for y in f]
-        print("tjq3: {}".format(tjq3))
-
-        print("indices: {}".format(indices))
+        # print("tjq3: {}".format(tjq3))
+        # print("indices: {}".format(indices))
 
         return [tjq1, tjq2, tjq3, indices]
 
