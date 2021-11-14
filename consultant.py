@@ -12,8 +12,8 @@ class Consultant(Client):
     def encrypt(self, message, user_id=0):
         user_public_key = self.server.user_public_key(user_id)
 
-        x = Element.random(self.pairing, G1)
-        y = Element.random(self.pairing, G1)
+        x = Element.random(self.pairing, Zr)
+        y = Element.random(self.pairing, Zr)
         u = pow(self.generator, x)
 
         vs = []
@@ -33,5 +33,5 @@ class Consultant(Client):
         divisor = pow(u, self.x_a())
         k = v.__ifloordiv__(divisor)
 
-        m = c.__ifloordiv__(k)
+        m = c / k
         return m

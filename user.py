@@ -10,8 +10,8 @@ class User(Client):
     def encrypt(self, message, user_id=0):
         consultant_public_key = self.server.user_public_key(user_id)
 
-        x = Element.random(self.pairing, G1)
-        y = Element.random(self.pairing, G1)
+        x = Element.random(self.pairing, Zr)
+        y = Element.random(self.pairing, Zr)
         u = pow(self.generator, x)
 
         vs = []
