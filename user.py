@@ -11,10 +11,10 @@ class User(Client):
         consultant_public_key = self.server.user_public_key(user_id)
 
         # Convert message to something in the group
-        message = Element(self.pairing, G1, value=message)
+        message = Element(self.pairing, Zr, value=message)
 
-        x = Element.random(self.pairing, G1)
-        y = Element.random(self.pairing, G1)
+        x = Element.random(self.pairing, Zr)
+        y = Element.random(self.pairing, Zr)
         u = pow(self.generator, x)
 
         vs = []
