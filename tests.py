@@ -25,6 +25,9 @@ class Test(unittest.TestCase):
         sigma = user.encrypt(message)
         decrypted = user.decrypt(sigma)
 
+        print("Message: {}".format(message))
+        print("Decrypt: {}".format(decrypted))
+
         self.assertEqual(message, decrypted)
 
     def test_consultant(self):
