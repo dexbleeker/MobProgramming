@@ -16,6 +16,7 @@ class Test(unittest.TestCase):
         # for client_id in range(1, random.randrange(4, 8)):
         self.users.append(User(self.server, 1))
 
+    @unittest.skip("This works, but takes a long time (166 seconds on my machine).")
     def test_user(self):
         """
         User should be able to decrypt his own ciphertext
@@ -27,6 +28,7 @@ class Test(unittest.TestCase):
 
         self.assertEqual(message, decrypted)
 
+    @unittest.skip("This works, but takes a long time (166 seconds on my machine).")
     def test_consultant(self):
         """
         Consultant should be able to decrypt users ciphertext
@@ -73,7 +75,6 @@ class Test(unittest.TestCase):
 
         self.assertTrue(filecmp.cmp("test-file.txt", decrypted_file_name))
 
-    @unittest.skip("This works, but takes a long time (166 seconds on my machine).")
     def test_image_file(self):
         """
         Test whether encryption/decryption of a image file works correctly.
@@ -86,7 +87,7 @@ class Test(unittest.TestCase):
 
         self.assertTrue(filecmp.cmp(image, decrypted_file_name))
 
-    def test_trapdoor(self):
+    def test_trapdoor_true(self):
         """
         Trapdoor evaluation should return True
         """
@@ -99,6 +100,22 @@ class Test(unittest.TestCase):
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
         self.assertTrue(result)
+
+    def test_trapdoor_false(self):
+        """
+        Trapdoor evaluation should return True
+        """
+        user = random.choice(self.users)
+        assert user.client_id() == 1
+
+        m_peck = user.m_peck(['transfher', 'withdrawal', 'private'])
+        trapdoor = user.generate_trapdoor([0], ['transfer', 'withdrawal', 'private'])
+
+        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+
+        self.assertTrue(result)
+
+
 
 
 if __name__ == '__main__':

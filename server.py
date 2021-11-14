@@ -1,14 +1,16 @@
 from Crypto.PublicKey import ElGamal
 from Crypto.Random import get_random_bytes
+from pypbc import *
 
 
 class Server:
     def __init__(self):
-        key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
+        self.pairing = Pairing(Parameters(qbits=512, rbits=160))
+        self.generator = Element.random(self.pairing, G1)
         # self.prime = int(key.p)
-        # self.generator = key.g
-        self.prime = 23
-        self.generator = 5
+        # # self.generator = key.g
+        # self.prime = 23
+        # self.generator = 5
         self.users = {}
 
     def prime(self):
@@ -27,6 +29,7 @@ class Server:
     def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
         print("Starting evaluating trapdoor")
         tjq1, tjq2, tjq3, indices = trapdoor
+        print("assign")
         a, bs, cs = m_peck
 
         # If the user id is not 0, get the second (1)
@@ -36,19 +39,21 @@ class Server:
 
         print("indices: {}".format(indices))
 
+        e = lambda e1,e2: self.pairing.apply(e1, e2)
+        
         left = tjq1
         for i in indices:
-            left = (left * cs[i]) % self.prime
+            left = e(left, cs[i])
 
         right1 = a
         for i in indices:
-            right1 = (right1 * tjq2[i]) % self.prime
+            right1 = e(right1, tjq2[i])
 
-        right2 = int(bs[uid])
+        right2 = bs[uid]
         for i in indices:
-            right2 = (right2 * tjq3[i]) % self.prime
+            right2 = e(right2, tjq3[i])
 
-        right = (right1 * right2) % self.prime
+        right = e(right1, right2)
 
         print("Left: {}".format(left))
         print("Right: {}".format(right))
