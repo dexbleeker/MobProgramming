@@ -13,6 +13,8 @@ class User(Client):
         # Convert message to something in the group
         message = Element(self.pairing, G1, value=message)
 
+        print("Message: {}".format(message))
+
         x = Element.random(self.pairing, Zr)
         y = Element.random(self.pairing, G1)
         u = pow(self.generator, x)
