@@ -29,8 +29,7 @@ class User(Client):
         v = int(sigma[-1])
 
         divisor = int(pow(u, self.x_a()))
-        inverse = v.__ifloordiv__(self.x_a())
-        k = pow(divisor, -1) * v
+        k = v.__ifloordiv__(divisor)
 
-        m = pow(k, -1) * c
+        m = c.__ifloordiv__(k)
         return m
