@@ -113,7 +113,7 @@ class Test(unittest.TestCase):
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
-        self.assertTrue(result)
+        self.assertFalse(result)
 
 
 

@@ -76,7 +76,8 @@ class Client:
 
         inverse = t.__ifloordiv__(self.x_a())
         print("Inverse: {}".format(inverse))
-        tjq3 = [y**(inverse*t) for y in f]
+        print("Inverse type{}".format(type(inverse)))
+        tjq3 = [y**(inverse) for y in f]
         print("tjq3: {}".format(tjq3))
 
         print("indices: {}".format(indices))

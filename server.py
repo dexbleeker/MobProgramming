@@ -41,19 +41,24 @@ class Server:
 
         e = lambda e1,e2: self.pairing.apply(e1, e2)
         
-        left = tjq1
+        left = Element.one(self.pairing, G1)
         for i in indices:
-            left = e(left, cs[i])
+            left = left * cs[i]
+        left = e(tjq1, left)
 
-        right1 = a
+        right1 = Element.one(self.pairing, G1)
         for i in indices:
-            right1 = e(right1, tjq2[i])
+            right1 = right1 * tjq2[i]
+        right1 = e(a,right1)
 
-        right2 = bs[uid]
+        g_s = bs[uid]
+        right2 = Element.one(self.pairing, G1)
+
         for i in indices:
-            right2 = e(right2, tjq3[i])
+            right2 = right2* tjq3[i]
+        right2 = e(g_s,right2)
 
-        right = e(right1, right2)
+        right = right1 * right2
 
         print("Left: {}".format(left))
         print("Right: {}".format(right))
