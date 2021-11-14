@@ -9,6 +9,7 @@ class Server:
         self.users = {}
 
     def prime(self):
+        print(type(self.params))
         return self.params.q
 
     def generator(self):
