@@ -21,6 +21,10 @@ class Server:
         return self.users[user_id]
 
     def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
+        """
+        This method evaluates the given trapdoor.
+        :return: True/False
+        """
         print("Starting evaluating trapdoor")
         tjq1, tjq2, tjq3, indices = trapdoor
         print("assign")

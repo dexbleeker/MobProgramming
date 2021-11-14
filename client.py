@@ -7,10 +7,8 @@ class Client:
     def __init__(self, server, client_id):
         self.__cid = client_id
         self.server = server
-        # self.prime = int(server.prime)
         self.generator = server.generator
         self.pairing = server.pairing
-        # self.__priv_key = random.randrange(start=1, stop=self.prime - 1)
         self.__priv_key = Element.random(self.pairing, Zr)
         self.__pub_key = Element(self.pairing, G1, value=self.generator ** self.__priv_key)
         # Send public key to server
@@ -31,15 +29,12 @@ class Client:
         return self.__cid
 
     def m_peck(self, keyword_set):
-
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
 
         print("mpeck h: {}".format(h))
         print("mpeck f: {}".format(f))
 
-        # s = random.randrange(start=1, stop=self.prime - 1)
-        # r = random.randrange(start=1, stop=self.prime - 1)
         s = Element.random(self.pairing, Zr)
         r = Element.random(self.pairing, Zr)
 
@@ -55,7 +50,6 @@ class Client:
         return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
-        # t = random.randrange(start=1, stop=self.prime - 1)
         t = Element.random(self.pairing, Zr)
 
         h = [self.h1(x) for x in keyword_set]
@@ -113,5 +107,4 @@ class Client:
 
     def get_hash_function(self, pairing, hash_function):
         return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (
-        bytes, bytearray)) else \
-            Element.from_hash(pairing, G1, hash_function(text.encode()).digest())
+            bytes, bytearray)) else Element.from_hash(pairing, G1, hash_function(text.encode()).digest())
