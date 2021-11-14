@@ -1,4 +1,4 @@
-from pypbc import *
+import random
 
 from client import Client
 
@@ -10,32 +10,26 @@ class User(Client):
     def encrypt(self, message, user_id=0):
         consultant_public_key = self.server.user_public_key(user_id)
 
-        # Convert message to something in the group
-        message = Element(self.pairing, Zr, value=message)
-
-        print("Message: {}".format(message))
-
-        x = Element.random(self.pairing, Zr)
-        y = Element.random(self.pairing, G1)
-        u = pow(self.generator, x)
+        x = random.randrange(start=1, stop=self.prime - 1)
+        y = random.randrange(start=1, stop=self.prime - 1)
+        u = pow(self.generator, x, self.prime)
 
         vs = []
         for key in [consultant_public_key, self.y_a()]:
-            v = pow(key * y, x)
+            v = pow(key * y % self.prime, x, self.prime)
             vs.append(v)
 
-        c = (pow(y, x) * message)
+        c = (pow(y, x, self.prime) * message) % self.prime
 
         return [c, u, *vs]
 
     def decrypt(self, sigma):
-        c = sigma[0]
-        u = sigma[1]
-        v = sigma[-1]
+        c = int(sigma[0])
+        u = int(sigma[1])
+        v = int(sigma[-1])
 
-        print("sigma: {}".format(sigma))
+        divisor = int(pow(u, self.x_a(), self.prime))
+        k = pow(divisor, -1, self.prime) * v
 
-        divisor = u ** self.x_a()
-        k = v.__ifloordiv__(divisor)
-        m = c.__ifloordiv__(k)
-        return str(m)
+        m = pow(k, -1, self.prime) * c % self.prime
+        return m

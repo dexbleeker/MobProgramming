@@ -7,8 +7,9 @@ class Client:
     def __init__(self, server, client_id):
         self.__cid = client_id
         self.server = server
-        self.generator = server.generator
         self.pairing = server.pairing
+        self.generator = server.generator()
+        self.prime = server.prime()
         self.__priv_key = Element.random(self.pairing, Zr)
         self.__pub_key = Element(self.pairing, G1, value=self.generator ** self.__priv_key)
         # Send public key to server
