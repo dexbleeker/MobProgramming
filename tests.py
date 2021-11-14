@@ -36,6 +36,9 @@ class Test(unittest.TestCase):
         sigma = user.encrypt(message)
         decrypted = self.consultant.decrypt(sigma)
 
+        print("Message: {}".format(message))
+        print("Decrypt: {}".format(decrypted))
+
         self.assertEqual(message, decrypted)
 
     def test_different_user(self):
