@@ -24,11 +24,11 @@ class User(Client):
         return [c, u, *vs]
 
     def decrypt(self, sigma):
-        c = int(sigma[0])
-        u = int(sigma[1])
-        v = int(sigma[-1])
+        c = sigma[0]
+        u = sigma[1]
+        v = sigma[-1]
 
-        divisor = int(pow(u, self.x_a()))
+        divisor = pow(u, self.x_a())
         k = v.__ifloordiv__(divisor)
 
         m = c.__ifloordiv__(k)
