@@ -4,7 +4,7 @@ from pypbc import *
 class Server:
     def __init__(self):
         self.params = Parameters(qbits=512, rbits=160)
-        self.pairing = Pairing(params)
+        self.pairing = Pairing(self.params)
         self.generator = Element.random(self.pairing, G1)
         self.users = {}
 
