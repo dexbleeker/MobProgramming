@@ -13,8 +13,8 @@ class Consultant(Client):
         # Convert message to something in the group
         message = Element(self.pairing, G1, value=message)
 
-        x = Element.random(self.pairing, Zr)
-        y = Element.random(self.pairing, Zr)
+        x = Element.random(self.pairing, G1)
+        y = Element.random(self.pairing, G1)
         u = pow(self.generator, x)
 
         vs = []
