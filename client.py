@@ -8,7 +8,7 @@ class Client:
         self.__cid = client_id
         self.server = server
         self.pairing = server.pairing
-        self.generator = server.generator()
+        self.generator = server.generator
         self.prime = server.prime()
         self.__priv_key = Element.random(self.pairing, Zr)
         self.__pub_key = Element(self.pairing, G1, value=self.generator ** self.__priv_key)
