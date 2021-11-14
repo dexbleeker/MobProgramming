@@ -116,6 +116,6 @@ class Client:
 
         return filename
 
-    def get_hash_function(self, pairing, hash_function: Callable[[Union[bytes, bytearray]], Any]) -> Callable[[Union[bytes, bytearray, str]], Element]:
+    def get_hash_function(self, pairing, hash_function):
         return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (bytes, bytearray)) else \
             Element.from_hash(pairing, G1, hash_function(text.encode()).digest())

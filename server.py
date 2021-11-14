@@ -1,5 +1,3 @@
-from Crypto.PublicKey import ElGamal
-from Crypto.Random import get_random_bytes
 from pypbc import *
 
 
@@ -7,10 +5,6 @@ class Server:
     def __init__(self):
         self.pairing = Pairing(Parameters(qbits=512, rbits=160))
         self.generator = Element.random(self.pairing, G1)
-        # self.prime = int(key.p)
-        # # self.generator = key.g
-        # self.prime = 23
-        # self.generator = 5
         self.users = {}
 
     def prime(self):
@@ -58,8 +52,3 @@ class Server:
         print("Left: {}".format(left))
         print("Right: {}".format(right))
         return left == right
-
-        # This method is not working correctly yet.
-        # To be able to continue with the rest of the assignment,
-        # we stub it to True for now.
-        # return True

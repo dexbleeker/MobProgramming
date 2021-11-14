@@ -87,7 +87,7 @@ class Test(unittest.TestCase):
 
         self.assertTrue(filecmp.cmp(image, decrypted_file_name))
 
-    def test_trapdoor_true(self):
+    def test_trapdoor(self):
         """
         Trapdoor evaluation should return True
         """
@@ -101,7 +101,7 @@ class Test(unittest.TestCase):
 
         self.assertTrue(result)
 
-    def test_trapdoor_false(self):
+    def test_invalid_trapdoor(self):
         """
         Trapdoor evaluation should return True
         """
@@ -113,9 +113,7 @@ class Test(unittest.TestCase):
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
-        self.assertTrue(result)
-
-
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':
