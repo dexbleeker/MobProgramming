@@ -10,16 +10,16 @@ class User(Client):
     def encrypt(self, message, user_id=0):
         consultant_public_key = self.server.user_public_key(user_id)
 
-        x = random.randrange(start=1, stop=self.prime - 1)
-        y = random.randrange(start=1, stop=self.prime - 1)
-        u = pow(self.generator, x, self.prime)
+        x = Element.random(genkey.pairing, Zr)
+        y = Element.random(genkey.pairing, Zr)
+        u = pow(self.generator, x)
 
         vs = []
         for key in [consultant_public_key, self.y_a()]:
-            v = pow(key * y % self.prime, x, self.prime)
+            v = pow(key * y, x)
             vs.append(v)
 
-        c = (pow(y, x, self.prime) * message) % self.prime
+        c = (pow(y, x) * message)
 
         return [c, u, *vs]
 
@@ -28,8 +28,9 @@ class User(Client):
         u = int(sigma[1])
         v = int(sigma[-1])
 
-        divisor = int(pow(u, self.x_a(), self.prime))
-        k = pow(divisor, -1, self.prime) * v
+        divisor = int(pow(u, self.x_a()))
+        inverse = v.__ifloordiv__(self.x_a())
+        k = pow(divisor, -1) * v
 
-        m = pow(k, -1, self.prime) * c % self.prime
+        m = pow(k, -1) * c
         return m

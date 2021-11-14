@@ -1,8 +1,6 @@
-from typing import Generator
-import mmh3
-from pypbc import *
 import hashlib
-from typing import *
+
+from pypbc import *
 
 
 class Client:
@@ -19,7 +17,6 @@ class Client:
         server.register_user(self.client_id(), self.y_a())
         self.h1 = self.get_hash_function(self.pairing, hashlib.sha3_256)
         self.h2 = self.get_hash_function(self.pairing, hashlib.sha3_512)
-
 
     def x_a(self):
         """Private key"""
@@ -45,7 +42,6 @@ class Client:
         # r = random.randrange(start=1, stop=self.prime - 1)
         s = Element.random(self.pairing, Zr)
         r = Element.random(self.pairing, Zr)
-
 
         a = self.generator ** r
         bs = [pow(key, s) for key in [self.server.user_public_key(0), self.y_a()]]
@@ -75,9 +71,7 @@ class Client:
         print("tjq2: {}".format(tjq2))
 
         inverse = t.__ifloordiv__(self.x_a())
-        print("Inverse: {}".format(inverse))
-        print("Inverse type{}".format(type(inverse)))
-        tjq3 = [y**(inverse) for y in f]
+        tjq3 = [y ** inverse for y in f]
         print("tjq3: {}".format(tjq3))
 
         print("indices: {}".format(indices))
@@ -118,5 +112,6 @@ class Client:
         return filename
 
     def get_hash_function(self, pairing, hash_function):
-        return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (bytes, bytearray)) else \
+        return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (
+        bytes, bytearray)) else \
             Element.from_hash(pairing, G1, hash_function(text.encode()).digest())
