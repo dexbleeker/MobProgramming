@@ -3,9 +3,13 @@ from pypbc import *
 
 class Server:
     def __init__(self):
-        self.pairing = Pairing(Parameters(qbits=512, rbits=160))
+        params = Parameters(qbits=512, rbits=160)
+        print("Params: {}".format(params))
+        self.pairing = Pairing(params)
         self.generator = Element.random(self.pairing, G1)
         self.users = {}
+
+
 
     def prime(self):
         return self.prime
