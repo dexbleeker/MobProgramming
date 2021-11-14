@@ -31,5 +31,5 @@ class User(Client):
         divisor = pow(u, self.x_a())
         k = v.__ifloordiv__(divisor)
 
-        m = c.__ifloordiv__(k)
+        m = c / k
         return m
