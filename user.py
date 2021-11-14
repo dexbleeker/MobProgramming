@@ -14,7 +14,7 @@ class User(Client):
         message = Element(self.pairing, Zr, value=message)
 
         x = Element.random(self.pairing, Zr)
-        y = Element.random(self.pairing, Zr)
+        y = Element.random(self.pairing, G1)
         u = pow(self.generator, x)
 
         vs = []
@@ -33,5 +33,5 @@ class User(Client):
 
         divisor = u ** self.x_a()
         k = v.__ifloordiv__(divisor)
-        m = c.__ifloordiv__(u)
+        m = c.__ifloordiv__(k)
         return m
