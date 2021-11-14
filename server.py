@@ -37,8 +37,8 @@ class Server:
 
         print("indices: {}".format(indices))
 
-        e = lambda e1,e2: self.pairing.apply(e1, e2)
-        
+        e = lambda e1, e2: self.pairing.apply(e1, e2)
+
         left = Element.one(self.pairing, G1)
         for i in indices:
             left = left * cs[i]
@@ -47,14 +47,14 @@ class Server:
         right1 = Element.one(self.pairing, G1)
         for i in indices:
             right1 = right1 * tjq2[i]
-        right1 = e(a,right1)
+        right1 = e(a, right1)
 
         g_s = bs[uid]
         right2 = Element.one(self.pairing, G1)
 
         for i in indices:
-            right2 = right2* tjq3[i]
-        right2 = e(g_s,right2)
+            right2 = right2 * tjq3[i]
+        right2 = e(g_s, right2)
 
         right = right1 * right2
 
