@@ -1,5 +1,3 @@
-import random
-
 from pypbc import *
 
 from client import Client
@@ -13,7 +11,7 @@ class Consultant(Client):
         user_public_key = self.server.user_public_key(user_id)
 
         # Convert message to something in the group
-        message = Element(self.pairing, Zr, value=message)
+        message = Element(self.pairing, G1, value=message)
 
         x = Element.random(self.pairing, Zr)
         y = Element.random(self.pairing, Zr)
