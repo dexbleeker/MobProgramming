@@ -31,7 +31,7 @@ class User(Client):
         u = sigma[1]
         v = sigma[-1]
 
-        divisor = pow(u, self.x_a())
+        divisor = u ** self.x_a()
         k = v.__ifloordiv__(divisor)
 
         print("K: {}".format(k))

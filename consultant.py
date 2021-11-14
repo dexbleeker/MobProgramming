@@ -31,7 +31,7 @@ class Consultant(Client):
         u = sigma[1]
         v = sigma[-2]
 
-        divisor = pow(u, self.x_a())
+        divisor = u ** self.x_a()
         k = v.__ifloordiv__(divisor)
 
         m = c.__ifloordiv__(k)
