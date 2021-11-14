@@ -32,8 +32,8 @@ class Client:
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
 
-        print("mpeck h: {}".format(h))
-        print("mpeck f: {}".format(f))
+        # print("mpeck h: {}".format(h))
+        # print("mpeck f: {}".format(f))
 
         s = Element.random(self.pairing, Zr)
         r = Element.random(self.pairing, Zr)
@@ -42,11 +42,11 @@ class Client:
         bs = [pow(key, s) for key in [self.server.user_public_key(0), self.y_a()]]
         cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
-        print("--------")
-        print("a: {}".format(a))
-        print("bs: {}".format(bs))
-        print("cs: {}".format(cs))
-        print("--------")
+        # print("--------")
+        # print("a: {}".format(a))
+        # print("bs: {}".format(bs))
+        # print("cs: {}".format(cs))
+        # print("--------")
         return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
