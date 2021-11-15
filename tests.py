@@ -26,7 +26,18 @@ class Test(unittest.TestCase):
 
         self.assertEqual(message, decrypted)
 
-    def test_consultant(self):
+    def test_consultant_encryptioon(self):
+        """
+        Consultant should be able to encrypt data for a user,
+        that he/she then is able to successfully decrypt.
+        """
+        user = random.choice(self.users)
+        message = 26874
+        sigma = self.consultant.encrypt(message)
+        decrypted = user.decrypt(sigma)
+        self.assertEqual(message, decrypted)
+
+    def test_consultant_decryption(self):
         """
         Consultant should be able to decrypt users ciphertext
         """
@@ -76,7 +87,19 @@ class Test(unittest.TestCase):
         """
         Test whether the consultant can properly store data
         """
-        pass
+        user = random.choice(self.users)
+
+        sigma = self.consultant.encrypt(23, user.user_id())
+        m_peck = self.consultant.m_peck(["foobar"])
+
+        # Store encrypted data
+        self.server.store_data(user.user_id(), (sigma, m_peck))
+
+        # User should now be able to retreive that data
+        trapdoor = user.generate_trapdoor([0], ["foobar"])
+        result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0], sigma)
 
     def test_data_querying(self):
         """
