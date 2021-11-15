@@ -61,8 +61,6 @@ class Server:
         self.data[0].append(data)  # Store separately for the consultant
         self.data[user_id].append(data)
 
-        print("data: {}".format(self.data))
-
     def evaluate_trapdoor(self, trapdoor, user_id):
         """
         :return: List of sigma's for which the trapdoor was True

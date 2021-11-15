@@ -95,7 +95,7 @@ class Test(unittest.TestCase):
 
     def test_data_storing_consultant(self):
         """
-        Test whether the consultant can properly store data.
+        Test whether the consultant can properly store data and the user can query it.
         """
         user = random.choice(self.users)
 
