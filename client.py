@@ -14,12 +14,12 @@ class Client:
         self._enc_priv_key = random.randrange(start=1, stop=self._enc_prime - 1)
         self._enc_pub_key = pow(self._enc_generator, self.enc_priv_key(), self._enc_prime)
         # Init trapdoor encryption
-        self.pairing = server.td_pairing()
-        self.generator = server.td_generator()
-        self._td_priv_key = Element.random(self.pairing, Zr)
-        self._td_pub_key = Element(self.pairing, G1, value=self.generator ** self._td_priv_key)
-        self.h1 = self.get_hash_function(self.pairing, hashlib.sha3_256)
-        self.h2 = self.get_hash_function(self.pairing, hashlib.sha3_512)
+        self._td_pairing = server.td_pairing()
+        self._td_generator = server.td_generator()
+        self._td_priv_key = Element.random(self._td_pairing, Zr)
+        self._td_pub_key = Element(self._td_pairing, G1, value=self._td_generator ** self._td_priv_key)
+        self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
+        self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
         # Send public keys to server
         server.register_user(self.client_id(), self.enc_pub_key(), self.td_pub_key())
 
@@ -31,6 +31,14 @@ class Client:
         """Encryption public key"""
         return self._enc_pub_key
 
+    def prime(self):
+        """Encryption prime"""
+        return self._enc_prime
+
+    def enc_generator(self):
+        """Encryption generator"""
+        return self._enc_generator
+
     def td_priv_key(self):
         """Trapdoor private key"""
         return self._td_priv_key
@@ -39,9 +47,9 @@ class Client:
         """Trapdoor public key"""
         return self._td_pub_key
 
-    def prime(self):
-        """Encryption prime"""
-        return self._enc_prime
+    def td_generator(self):
+        """Encryption generator"""
+        return self._td_generator
 
     def client_id(self):
         """The id of the client"""

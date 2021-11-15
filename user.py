@@ -12,7 +12,7 @@ class User(Client):
 
         x = random.randrange(start=1, stop=self.prime() - 1)
         y = random.randrange(start=1, stop=self.prime() - 1)
-        u = pow(self.generator, x, self.prime())
+        u = pow(self.enc_generator(), x, self.prime())
 
         vs = []
         for key in [consultant_public_key, self.enc_pub_key()]:
