@@ -2,6 +2,7 @@ from Crypto.PublicKey import ElGamal
 from Crypto.Random import get_random_bytes
 from pypbc import *
 
+
 class Server:
     def __init__(self):
         # Init key lists
@@ -55,25 +56,22 @@ class Server:
 
         # If the user id is not 0, get the second (1)
         # element from bs later
-        if user_id != 0:
-            uid = 1
+        uid = 1 if user_id != 0 else uid = 0
 
-        # print("indices: {}".format(indices))
+        e = lambda e1, e2: self.td_pairing().apply(e1, e2)
 
-        e = lambda e1, e2: self.pairing.apply(e1, e2)
-
-        left = Element.one(self.pairing, G1)
+        left = Element.one(self.td_pairing(), G1)
         for i in indices:
             left = left * cs[i]
         left = e(tjq1, left)
 
-        right1 = Element.one(self.pairing, G1)
+        right1 = Element.one(self.td_pairing(), G1)
         for i in indices:
             right1 = right1 * tjq2[i]
         right1 = e(a, right1)
 
         g_s = bs[uid]
-        right2 = Element.one(self.pairing, G1)
+        right2 = Element.one(self.td_pairing(), G1)
 
         for i in indices:
             right2 = right2 * tjq3[i]
