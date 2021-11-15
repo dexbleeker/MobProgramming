@@ -9,26 +9,38 @@ class Client:
         self._cid = client_id
         self.server = server
         # Init encryption keys
-        self.enc_prime = server.enc_prime()
+        self._enc_prime = server.enc_prime()
         self._enc_priv_key = server._enc_prime
-        self._enc_pub_key = random.randrange(start=1, stop=self.enc_prime - 1)
+        self._enc_pub_key = random.randrange(start=1, stop=self._enc_prime - 1)
         # Init trapdoor encryption
         self.pairing = server.td_pairing()
         self.generator = server.td_generator()
         self._td_priv_key = Element.random(self.pairing, Zr)
         self._td_pub_key = Element(self.pairing, G1, value=self.generator ** self._td_priv_key)
         # Send public key to server
-        server.register_user(self.client_id(), self.y_a())
+        server.register_user(self.client_id(), self.td_pub_key())
         self.h1 = self.get_hash_function(self.pairing, hashlib.sha3_256)
         self.h2 = self.get_hash_function(self.pairing, hashlib.sha3_512)
 
-    def x_a(self):
+    def enc_priv_key(self):
         """Encryption private key"""
+        return self._enc_priv_key
+
+    def enc_pub_key(self):
+        """Encryption public key"""
+        return self._enc_pub_key
+
+    def td_priv_key(self):
+        """Trapdoor private key"""
         return self._td_priv_key
 
-    def y_a(self):
-        """Encryption public key"""
+    def td_pub_key(self):
+        """Trapdoor public key"""
         return self._td_pub_key
+
+    def prime(self):
+        """Encryption prime"""
+        return self._enc_prime
 
     def client_id(self):
         """The id of the client"""
@@ -45,7 +57,7 @@ class Client:
         r = Element.random(self.pairing, Zr)
 
         a = self.generator ** r
-        bs = [pow(key, s) for key in [self.server.user_public_key(0), self.y_a()]]
+        bs = [pow(key, s) for key in [self.server.user_public_key(0), self.td_pub_key()]]
         cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
         # print("--------")
@@ -70,7 +82,7 @@ class Client:
         tjq2 = [pow(x, t) for x in h]
         # print("tjq2: {}".format(tjq2))
 
-        inverse = t.__ifloordiv__(self.x_a())
+        inverse = t.__ifloordiv__(self.td_priv_key())
         tjq3 = [y ** inverse for y in f]
         # print("tjq3: {}".format(tjq3))
         # print("indices: {}".format(indices))
