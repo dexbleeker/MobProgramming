@@ -105,6 +105,8 @@ class Test(unittest.TestCase):
         # Store encrypted data
         self.server.store_data(user.user_id(), (sigma, m_peck))
 
+        print("Uid: {}".format(user.user_id()))
+
         # User should now be able to retrieve that data
         trapdoor = user.generate_trapdoor([0], ["foobar"])
         result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
