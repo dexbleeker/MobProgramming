@@ -56,7 +56,7 @@ class Server:
 
         # If the user id is not 0, get the second (1)
         # element from bs later
-        uid = 1 if user_id != 0 else uid = 0
+        uid = 1 if user_id != 0 else 0
 
         e = lambda e1, e2: self.td_pairing().apply(e1, e2)
 
