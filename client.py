@@ -48,8 +48,12 @@ class Client:
         return self._td_pub_key
 
     def td_generator(self):
-        """Encryption generator"""
+        """Trapdoor generator"""
         return self._td_generator
+    
+    def td_pairing(self):
+        """Trapdoor pairing"""
+        return self._td_pairing
 
     def client_id(self):
         """The id of the client"""
@@ -62,10 +66,10 @@ class Client:
         # print("mpeck h: {}".format(h))
         # print("mpeck f: {}".format(f))
 
-        s = Element.random(self.pairing, Zr)
-        r = Element.random(self.pairing, Zr)
+        s = Element.random(self.td_pairing(), Zr)
+        r = Element.random(self.td_pairing(), Zr)
 
-        a = self.generator ** r
+        a = self.td_generator() ** r
         bs = [pow(key, s) for key in [self.server.user_public_key(0), self.td_pub_key()]]
         cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
@@ -77,7 +81,7 @@ class Client:
         return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
-        t = Element.random(self.pairing, Zr)
+        t = Element.random(self.td_pairing(), Zr)
 
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
@@ -85,7 +89,7 @@ class Client:
         # print("mpeck h: {}".format(h))
         # print("mpeck f: {}".format(f))
 
-        tjq1 = pow(self.generator, t)
+        tjq1 = pow(self.td_generator(), t)
         # print("tjq1: {}".format(tjq1))
 
         tjq2 = [pow(x, t) for x in h]
