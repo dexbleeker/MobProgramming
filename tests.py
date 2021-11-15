@@ -40,14 +40,13 @@ class Test(unittest.TestCase):
 
     def test_consultant_encryption_for_consultant(self):
         """
-        Consultant that tries to encrypt something for himself
-        should get an error.
+        Consultant that tries to encrypt something for himself should get an error.
         """
         self.assertRaises(Exception, self.consultant.encrypt(7899654))
 
     def test_consultant_decryption(self):
         """
-        Consultant should be able to decrypt users ciphertext
+        Consultant should be able to decrypt users ciphertext.
         """
         user = random.choice(self.users)
         message = 26874
@@ -58,7 +57,7 @@ class Test(unittest.TestCase):
 
     def test_different_user(self):
         """
-        Different user should NOT be able to decrypt users ciphertext
+        Different user should NOT be able to decrypt users ciphertext.
         """
         user1 = random.choice(self.users)
         user2 = random.choice(self.users)
@@ -73,7 +72,7 @@ class Test(unittest.TestCase):
 
     def test_ids(self):
         """
-        Consultant id should be 0 and user ids should not be 0
+        Consultant id should be 0 and user ids should not be 0.
         """
         self.assertEqual(self.consultant.user_id(), 0)
         for u in self.users:
@@ -93,7 +92,7 @@ class Test(unittest.TestCase):
 
     def test_data_storing_consultant(self):
         """
-        Test whether the consultant can properly store data
+        Test whether the consultant can properly store data.
         """
         user = random.choice(self.users)
 
