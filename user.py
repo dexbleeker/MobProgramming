@@ -109,7 +109,7 @@ class User:
         if not self.is_consultant() and user_id != 0:
             raise Exception("A user is not allowed to encrypt stuff for another user (just the consultant)")
 
-        consultant_public_key = self.server.user_enc_pub(0)
+        consultant_public_key = self.server.user_enc_pub(user_id)
 
         x = random.randrange(start=1, stop=self.prime() - 1)
         y = random.randrange(start=1, stop=self.prime() - 1)
