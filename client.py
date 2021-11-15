@@ -1,4 +1,5 @@
 import hashlib
+import random
 
 from pypbc import *
 

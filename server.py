@@ -1,9 +1,6 @@
-import re
-
 from Crypto.PublicKey import ElGamal
 from Crypto.Random import get_random_bytes
 from pypbc import *
-
 
 class Server:
     def __init__(self):
