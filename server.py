@@ -11,8 +11,7 @@ class Server:
         self.users = {}
 
     def prime(self):
-        s = 'asdf=5;iwantthis123jasd'
-        result = re.search('q (.*)\nh', self.params)
+        result = re.search('q (.*)\nh', str(self.params))
         print(result.group(1))
 
         return result.group(1)
