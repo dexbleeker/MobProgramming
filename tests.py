@@ -82,9 +82,16 @@ class Test(unittest.TestCase):
         m_peck = user.m_peck(["foobar"])
         self.server.store_data(user.user_id(), (sigma, m_peck))
 
+        # Test trapdoor that should return nothing
         trapdoor = user.generate_trapdoor([0, 1], ["foobar", "barfoo"])
         result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
 
+        self.assertEqual(len(result), 0)
+        self.assertEqual(result[0], {})
+
+        # Test trapdoor that should return single sigma
+        trapdoor = user.generate_trapdoor([0], ["foobar"])
+        result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], sigma)
 
