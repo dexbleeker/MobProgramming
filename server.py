@@ -1,20 +1,25 @@
 import re
 
+from Crypto.PublicKey import ElGamal
+from Crypto.Random import get_random_bytes
 from pypbc import *
 
 
 class Server:
     def __init__(self):
+        # Init empty user (pk) dict
+        self.users = {}
+        # Init default encryption
+        key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
+        self.prime = int(key.p)
+        self.generator = key.g
+        # Init trapdoor encryption
         self.params = Parameters(qbits=512, rbits=160)
         self.pairing = Pairing(self.params)
         self.generator = Element.random(self.pairing, G1)
-        self.users = {}
 
     def prime(self):
-        result = re.search('q (.*)\nh', str(self.params))
-        print(int(result.group(1)))
-
-        return int(result.group(1))
+        return self.prime
 
     def generator(self):
         return self.generator
