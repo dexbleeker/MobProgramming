@@ -1,9 +1,30 @@
+import random
+
 from client import Client
 
 
 class Consultant(Client):
     def __init__(self, server):
         super().__init__(server, 0)
+
+    def encrypt(self, message, user_id=0):
+        if user_id == 0:
+            raise Exception("Why would the consultant encrypt something for himself?")
+
+        user_public_key = self.server.user_enc_pub(user_id)
+
+        x = random.randrange(start=1, stop=self.prime() - 1)
+        y = random.randrange(start=1, stop=self.prime() - 1)
+        u = pow(self.enc_generator(), x, self.prime())
+
+        vs = []
+        for key in [self.enc_pub_key(), user_public_key]:
+            v = pow(key * y % self.prime(), x, self.prime())
+            vs.append(v)
+
+        c = (pow(y, x, self.prime()) * message) % self.prime()
+
+        return [c, u, *vs]
 
     def decrypt(self, sigma):
         c = int(sigma[0])

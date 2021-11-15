@@ -59,9 +59,6 @@ class User:
         """The id of the client"""
         return self._cid
 
-    def is_consultant(self):
-        return self.user_id() == 0
-
     def send_data(self, data, keyword_set):
         """
         Store data in datastore of server.
@@ -104,25 +101,7 @@ class User:
         return [tjq1, tjq2, tjq3, indices]
 
     def encrypt(self, message, user_id=0):
-        if self.is_consultant() and user_id == 0:
-            raise Exception("Why would the consultant encrypt something for himself?")
-        if not self.is_consultant() and user_id != 0:
-            raise Exception("A user is not allowed to encrypt stuff for another user (just the consultant)")
-
-        consultant_public_key = self.server.user_enc_pub(user_id)
-
-        x = random.randrange(start=1, stop=self.prime() - 1)
-        y = random.randrange(start=1, stop=self.prime() - 1)
-        u = pow(self.enc_generator(), x, self.prime())
-
-        vs = []
-        for key in [consultant_public_key, self.enc_pub_key()]:
-            v = pow(key * y % self.prime(), x, self.prime())
-            vs.append(v)
-
-        c = (pow(y, x, self.prime()) * message) % self.prime()
-
-        return [c, u, *vs]
+        NotImplementedError("Class %s doesn't implement encrypt()" % self.__class__.__name__)
 
     def encrypt_file(self, filename, user_id=0):
         f = open(filename, "rb")
