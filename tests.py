@@ -42,7 +42,10 @@ class Test(unittest.TestCase):
         """
         Consultant that tries to encrypt something for himself should get an error.
         """
-        self.assertRaises(Exception, self.consultant.encrypt(7899654))
+        with self.assertRaises(Exception) as context:
+            self.consultant.encrypt(7899654)
+
+        self.assertTrue("Why would the consultant encrypt something for himself" in str(context.exception))
 
     def test_consultant_decryption(self):
         """
@@ -102,7 +105,7 @@ class Test(unittest.TestCase):
         # Store encrypted data
         self.server.store_data(user.user_id(), (sigma, m_peck))
 
-        # User should now be able to retreive that data
+        # User should now be able to retrieve that data
         trapdoor = user.generate_trapdoor([0], ["foobar"])
         result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
         self.assertEqual(len(result), 1)
@@ -179,8 +182,7 @@ class Test(unittest.TestCase):
         self.assertEqual(len(result2), 1)
         self.assertEqual(result2[0], sigma2)
 
-        # Now for the interesting part:
-        # The consultant should het both results.
+        # Now for the interesting part: The consultant should het both results.
         trapdoor3 = self.consultant.generate_trapdoor([0], ["foobar"])
         result3 = self.server.evaluate_trapdoor(trapdoor3, 0)
         self.assertEqual(len(result3), 2)
@@ -213,7 +215,7 @@ class Test(unittest.TestCase):
 
     def test_single_trapdoor(self):
         """
-        Trapdoor evaluation should return True
+        Trapdoor evaluation should return True.
         """
         user = random.choice(self.users)
         assert user.user_id() == 1
@@ -227,8 +229,7 @@ class Test(unittest.TestCase):
 
     def test_multiple_trapdoor(self):
         """
-        Trapdoor evaluation should return true,
-        even if multiple keywords are used.
+        Trapdoor evaluation should return True, even if multiple keywords are used.
         """
         user = random.choice(self.users)
         assert user.user_id() == 1
@@ -242,7 +243,7 @@ class Test(unittest.TestCase):
 
     def test_invalid_trapdoor(self):
         """
-        Trapdoor evaluation should return True
+        Trapdoor evaluation should return False.
         """
         user = random.choice(self.users)
         assert user.user_id() == 1
