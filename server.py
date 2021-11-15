@@ -50,7 +50,6 @@ class Server:
         This method evaluates the given trapdoor.
         :return: True/False
         """
-        print("Starting evaluating trapdoor")
         tjq1, tjq2, tjq3, indices = trapdoor
         a, bs, cs = m_peck
 
@@ -79,6 +78,4 @@ class Server:
 
         right = right1 * right2
 
-        # print("Left: {}".format(left))
-        # print("Right: {}".format(right))
         return left == right

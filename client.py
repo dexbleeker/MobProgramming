@@ -63,9 +63,6 @@ class Client:
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
 
-        # print("mpeck h: {}".format(h))
-        # print("mpeck f: {}".format(f))
-
         s = Element.random(self.td_pairing(), Zr)
         r = Element.random(self.td_pairing(), Zr)
 
@@ -73,11 +70,6 @@ class Client:
         bs = [pow(key, s) for key in [self.server.user_td_pub(0), self.td_pub_key()]]
         cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
-        # print("--------")
-        # print("a: {}".format(a))
-        # print("bs: {}".format(bs))
-        # print("cs: {}".format(cs))
-        # print("--------")
         return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
@@ -86,20 +78,12 @@ class Client:
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
 
-        # print("mpeck h: {}".format(h))
-        # print("mpeck f: {}".format(f))
-
         tjq1 = pow(self.td_generator(), t)
-        # print("tjq1: {}".format(tjq1))
 
         tjq2 = [pow(x, t) for x in h]
-        # print("tjq2: {}".format(tjq2))
 
         inverse = t.__ifloordiv__(self.td_priv_key())
         tjq3 = [y ** inverse for y in f]
-        # print("tjq3: {}".format(tjq3))
-        # print("indices: {}".format(indices))
-
         return [tjq1, tjq2, tjq3, indices]
 
     def encrypt(self, message, user_id=0):
