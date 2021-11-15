@@ -18,8 +18,6 @@ class User:
         self._td_generator = server.td_generator()
         self._td_priv_key = Element.random(self._td_pairing, Zr)
         self._td_pub_key = Element(self._td_pairing, G1, value=self._td_generator ** self._td_priv_key)
-        # self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
-        # self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
         self.h1 = lambda text: Element.from_hash(self._td_pairing, G1, hashlib.sha3_256(text.encode()).digest())
         self.h2 = lambda text: Element.from_hash(self._td_pairing, G1, hashlib.sha3_512(text.encode()).digest())
         # Send public keys to server
@@ -134,7 +132,3 @@ class User:
         result.close()
 
         return filename
-
-    def get_hash_function(self, pairing, hash_function):
-        return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (
-            bytes, bytearray)) else Element.from_hash(pairing, G1, hash_function(text.encode()).digest())
