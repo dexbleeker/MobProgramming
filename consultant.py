@@ -8,6 +8,9 @@ class Consultant(Client):
         super().__init__(server, 0)
 
     def encrypt(self, message, user_id=0):
+        if user_id == 0:
+            raise Exception("Why would the consultant encrypt something for himself?")
+
         user_public_key = self.server.user_enc_pub(user_id)
 
         x = random.randrange(start=1, stop=self.prime() - 1)

@@ -26,16 +26,24 @@ class Test(unittest.TestCase):
 
         self.assertEqual(message, decrypted)
 
-    def test_consultant_encryptioon(self):
+    def test_consultant_encryption_for_user(self):
         """
         Consultant should be able to encrypt data for a user,
         that he/she then is able to successfully decrypt.
         """
         user = random.choice(self.users)
         message = 26874
-        sigma = self.consultant.encrypt(message)
+        sigma = self.consultant.encrypt(message, user.user_id())
         decrypted = user.decrypt(sigma)
+
         self.assertEqual(message, decrypted)
+
+    def test_consultant_encryption_for_consultant(self):
+        """
+        Consultant that tries to encrypt something for himself
+        should get an error.
+        """
+        self.assertRaises(Exception, self.consultant.encrypt(7899654))
 
     def test_consultant_decryption(self):
         """
