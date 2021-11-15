@@ -24,9 +24,9 @@ class User(Client):
         return [c, u, *vs]
 
     def decrypt(self, sigma):
-        c = int(sigma[0])
-        u = int(sigma[1])
-        v = int(sigma[-1])
+        c = sigma[0]
+        u = sigma[1]
+        v = sigma[-1]
 
         divisor = int(pow(u, self.enc_priv_key(), self.prime()))
         k = pow(divisor, -1, self.prime()) * v
