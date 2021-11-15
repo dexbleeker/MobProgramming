@@ -71,6 +71,7 @@ class Test(unittest.TestCase):
 
         self.assertTrue(filecmp.cmp("test-file.txt", decrypted_file_name))
 
+    @unittest.skip("This works, but takes a long time (166 seconds on my machine).")
     def test_image_file(self):
         """
         Test whether encryption/decryption of a image file works correctly.
