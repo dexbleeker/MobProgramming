@@ -33,7 +33,7 @@ class Test(unittest.TestCase):
         """
         user = random.choice(self.users)
         message = 26874
-        sigma = self.consultant.encrypt(message)
+        sigma = self.consultant.encrypt(message, user.user_id())
         decrypted = user.decrypt(sigma)
 
         self.assertEqual(message, decrypted)
