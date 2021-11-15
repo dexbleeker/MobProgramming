@@ -33,7 +33,7 @@ class Test(unittest.TestCase):
         """
         user = random.choice(self.users)
         message = 26874
-        sigma = self.consultant.encrypt(message, user.user_id())
+        sigma = self.consultant.encrypt(message)
         decrypted = user.decrypt(sigma)
 
         self.assertEqual(message, decrypted)
@@ -87,7 +87,7 @@ class Test(unittest.TestCase):
         """
         user = random.choice(self.users)
 
-        sigma = user.encrypt(23)
+        sigma = user.encrypt(452)
         m_peck = user.m_peck(["foobar"])
         self.server.store_data(user.user_id(), (sigma, m_peck))
 
@@ -99,13 +99,11 @@ class Test(unittest.TestCase):
         """
         user = random.choice(self.users)
 
-        sigma = self.consultant.encrypt(23, user.user_id())
+        sigma = self.consultant.encrypt(7945, user.user_id())
         m_peck = self.consultant.m_peck(["foobar"])
 
         # Store encrypted data
         self.server.store_data(user.user_id(), (sigma, m_peck))
-
-        print("Uid: {}".format(user.user_id()))
 
         # User should now be able to retrieve that data
         trapdoor = user.generate_trapdoor([0], ["foobar"])
