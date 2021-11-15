@@ -12,9 +12,9 @@ class Server:
 
     def prime(self):
         result = re.search('q (.*)\nh', str(self.params))
-        print(result.group(1))
+        print(int(result.group(1)))
 
-        return result.group(1)
+        return int(result.group(1))
 
     def generator(self):
         return self.generator
