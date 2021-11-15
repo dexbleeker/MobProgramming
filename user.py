@@ -18,8 +18,10 @@ class User:
         self._td_generator = server.td_generator()
         self._td_priv_key = Element.random(self._td_pairing, Zr)
         self._td_pub_key = Element(self._td_pairing, G1, value=self._td_generator ** self._td_priv_key)
-        self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
-        self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
+        # self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
+        # self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
+        self.h1 = lambda text: Element.from_hash(self._td_pairing, G1, hashlib.sha3_256(text).digest())
+        self.h2 = lambda text: Element.from_hash(self._td_pairing, G1, hashlib.sha3_512(text).digest())
         # Send public keys to server
         server.register_user(self.user_id(), self.enc_pub_key(), self.td_pub_key())
 
