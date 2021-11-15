@@ -70,7 +70,7 @@ class Client:
         r = Element.random(self.td_pairing(), Zr)
 
         a = self.td_generator() ** r
-        bs = [pow(key, s) for key in [self.server.user_public_key(0), self.td_pub_key()]]
+        bs = [pow(key, s) for key in [self.server.user_td_pub(0), self.td_pub_key()]]
         cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
         # print("--------")
