@@ -15,8 +15,8 @@ class Server:
         self._enc_generator = _key.g
         # Init trapdoor encryption
         self._td_params = Parameters(qbits=512, rbits=160)
-        self._td_pairing = Pairing(self.params)
-        self._td_generator = Element.random(self.pairing, G1)
+        self._td_pairing = Pairing(self._td_params)
+        self._td_generator = Element.random(self._td_pairing, G1)
 
     def enc_prime(self):
         """Prime for default encryption"""
