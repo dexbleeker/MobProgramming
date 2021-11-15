@@ -102,19 +102,6 @@ class Test(unittest.TestCase):
         sigma = self.consultant.encrypt(7945, user.user_id())
         m_peck = self.consultant.m_peck(["foobar"], user.user_id())
 
-        sigma2 = user.encrypt(7945)
-        m_peck2 = user.m_peck(["foobar"])
-
-        print("SIGMA THE SAME?")
-        print(sigma2 == sigma)
-        print(sigma)
-        print(sigma2)
-
-        print("MPECK THE SAME?")
-        print(m_peck == m_peck2)
-        print(m_peck)
-        print(m_peck2)
-
         # Store encrypted data
         self.server.store_data(user.user_id(), (sigma, m_peck))
 

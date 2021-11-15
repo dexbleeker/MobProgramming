@@ -60,7 +60,6 @@ class Server:
         """
         self.data[0].append(data)  # Store separately for the consultant
         self.data[user_id].append(data)
-        print(self.data)
 
     def evaluate_trapdoor(self, trapdoor, user_id):
         """
