@@ -10,8 +10,9 @@ class Client:
         self.server = server
         # Init encryption keys
         self._enc_prime = server.enc_prime()
-        self._enc_priv_key = server._enc_prime
-        self._enc_pub_key = random.randrange(start=1, stop=self._enc_prime - 1)
+        self._enc_generator = server.enc_generator()
+        self._enc_priv_key = random.randrange(start=1, stop=self._enc_prime - 1)
+        self._enc_pub_key = pow(self._enc_generator, self.enc_priv_key(), self._enc_prime)
         # Init trapdoor encryption
         self.pairing = server.td_pairing()
         self.generator = server.td_generator()
