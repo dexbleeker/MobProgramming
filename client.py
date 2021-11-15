@@ -17,10 +17,10 @@ class Client:
         self.generator = server.td_generator()
         self._td_priv_key = Element.random(self.pairing, Zr)
         self._td_pub_key = Element(self.pairing, G1, value=self.generator ** self._td_priv_key)
-        # Send public key to server
-        server.register_user(self.client_id(), self.td_pub_key())
         self.h1 = self.get_hash_function(self.pairing, hashlib.sha3_256)
         self.h2 = self.get_hash_function(self.pairing, hashlib.sha3_512)
+        # Send public keys to server
+        server.register_user(self.client_id(), self.enc_pub_key(), self.td_pub_key())
 
     def enc_priv_key(self):
         """Encryption private key"""

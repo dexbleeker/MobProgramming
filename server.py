@@ -4,8 +4,9 @@ from pypbc import *
 
 class Server:
     def __init__(self):
-        # Init empty user (pk) dict
-        self.users = {}
+        # Init key lists
+        self.enc_keys = {}
+        self.td_keys = {}
         # Init default encryption
         _key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
         self._enc_prime = int(_key.p)
@@ -31,12 +32,17 @@ class Server:
         """Pairing for trapdoor encryption"""
         return self._td_pairing
 
-    def register_user(self, client_id, public_key):
-        self.users[client_id] = public_key
+    def register_user(self, client_id, enc_pub_key, td_pub_key):
+        self.enc_keys[client_id] = enc_pub_key
+        self.td_keys[client_id] = td_pub_key
 
-    def user_public_key(self, user_id):
+    def user_enc_pub(self, user_id):
         """Remember, user_id 0 is the consultant"""
-        return self.users[user_id]
+        return self.enc_keys[user_id]
+
+    def user_td_pub(self, user_id):
+        """Remember, user_id 0 is the consultant"""
+        return self.td_keys[user_id]
 
     def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
         """
