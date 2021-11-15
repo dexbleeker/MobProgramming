@@ -72,8 +72,8 @@ class User:
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
 
-        s = Element.random(self.td_pairing(), Zr)
-        r = Element.random(self.td_pairing(), Zr)
+        s = Element.one(self.td_pairing(), Zr)
+        r = Element.one(self.td_pairing(), Zr)
 
         a = self.td_generator() ** r
         bs = [pow(key, s) for key in [self.server.user_td_pub(0), self.td_pub_key()]]
@@ -82,7 +82,7 @@ class User:
         return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
-        t = Element.random(self.td_pairing(), Zr)
+        t = Element.one(self.td_pairing(), Zr)
 
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
