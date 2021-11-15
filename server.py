@@ -1,3 +1,5 @@
+import re
+
 from pypbc import *
 
 
@@ -9,8 +11,11 @@ class Server:
         self.users = {}
 
     def prime(self):
-        print(type(self.params))
-        return self.params.q
+        s = 'asdf=5;iwantthis123jasd'
+        result = re.search('q (.*)\nh', self.params)
+        print(result.group(1))
+
+        return result.group(1)
 
     def generator(self):
         return self.generator
