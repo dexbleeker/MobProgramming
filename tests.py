@@ -87,13 +87,14 @@ class Test(unittest.TestCase):
         result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
 
         self.assertEqual(len(result), 0)
-        self.assertEqual(result[0], {})
+        self.assertEqual(result, {})
 
         # Test trapdoor that should return single sigma
         trapdoor = user.generate_trapdoor([0], ["foobar"])
         result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], sigma)
+        self.assertEqual(result[1], m_peck)
 
     def test_different_user_search(self):
         """
