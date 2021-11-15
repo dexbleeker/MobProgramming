@@ -120,8 +120,8 @@ class Test(unittest.TestCase):
         user = random.choice(self.users)
         assert user.client_id() == 1
 
-        m_peck = user.m_peck(['transfher'])
-        trapdoor = user.generate_trapdoor([0], ['transfer'])
+        m_peck = user.m_peck(['foobar'])
+        trapdoor = user.generate_trapdoor([0], ['boofar'])
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
