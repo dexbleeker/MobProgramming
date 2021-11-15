@@ -16,7 +16,6 @@ class Test(unittest.TestCase):
         # for client_id in range(1, random.randrange(4, 8)):
         self.users.append(User(self.server, 1))
 
-    @unittest.skip("This works, but takes a long time (166 seconds on my machine).")
     def test_user(self):
         """
         User should be able to decrypt his own ciphertext
@@ -26,9 +25,11 @@ class Test(unittest.TestCase):
         sigma = user.encrypt(message)
         decrypted = user.decrypt(sigma)
 
+        print("Message: {}".format(message))
+        print("Decrypt: {}".format(decrypted))
+
         self.assertEqual(message, decrypted)
 
-    @unittest.skip("This works, but takes a long time (166 seconds on my machine).")
     def test_consultant(self):
         """
         Consultant should be able to decrypt users ciphertext
@@ -38,9 +39,11 @@ class Test(unittest.TestCase):
         sigma = user.encrypt(message)
         decrypted = self.consultant.decrypt(sigma)
 
+        print("Message: {}".format(message))
+        print("Decrypt: {}".format(decrypted))
+
         self.assertEqual(message, decrypted)
 
-    @unittest.skip("Skip for now.")
     def test_different_user(self):
         """
         Different user should NOT be able to decrypt users ciphertext

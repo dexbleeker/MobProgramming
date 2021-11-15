@@ -1,14 +1,20 @@
+import re
+
 from pypbc import *
 
 
 class Server:
     def __init__(self):
-        self.pairing = Pairing(Parameters(qbits=512, rbits=160))
+        self.params = Parameters(qbits=512, rbits=160)
+        self.pairing = Pairing(self.params)
         self.generator = Element.random(self.pairing, G1)
         self.users = {}
 
     def prime(self):
-        return self.prime
+        result = re.search('q (.*)\nh', str(self.params))
+        print(int(result.group(1)))
+
+        return int(result.group(1))
 
     def generator(self):
         return self.generator
@@ -21,9 +27,12 @@ class Server:
         return self.users[user_id]
 
     def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
+        """
+        This method evaluates the given trapdoor.
+        :return: True/False
+        """
         print("Starting evaluating trapdoor")
         tjq1, tjq2, tjq3, indices = trapdoor
-        print("assign")
         a, bs, cs = m_peck
 
         # If the user id is not 0, get the second (1)
@@ -31,10 +40,10 @@ class Server:
         if user_id != 0:
             uid = 1
 
-        print("indices: {}".format(indices))
+        # print("indices: {}".format(indices))
 
-        e = lambda e1,e2: self.pairing.apply(e1, e2)
-        
+        e = lambda e1, e2: self.pairing.apply(e1, e2)
+
         left = Element.one(self.pairing, G1)
         for i in indices:
             left = left * cs[i]
@@ -43,17 +52,17 @@ class Server:
         right1 = Element.one(self.pairing, G1)
         for i in indices:
             right1 = right1 * tjq2[i]
-        right1 = e(a,right1)
+        right1 = e(a, right1)
 
         g_s = bs[uid]
         right2 = Element.one(self.pairing, G1)
 
         for i in indices:
-            right2 = right2* tjq3[i]
-        right2 = e(g_s,right2)
+            right2 = right2 * tjq3[i]
+        right2 = e(g_s, right2)
 
         right = right1 * right2
 
-        print("Left: {}".format(left))
-        print("Right: {}".format(right))
+        # print("Left: {}".format(left))
+        # print("Right: {}".format(right))
         return left == right
