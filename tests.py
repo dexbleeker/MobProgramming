@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
         assert user.client_id() == 1
 
         m_peck = user.m_peck(['transfer', 'withdrawal', 'private'])
-        trapdoor = user.generate_trapdoor([0, 3], ['transfer', 'withdrawal', 'private'])
+        trapdoor = user.generate_trapdoor([0, 2], ['transfer', 'withdrawal', 'private'])
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
