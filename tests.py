@@ -90,15 +90,30 @@ class Test(unittest.TestCase):
 
         self.assertTrue(filecmp.cmp(image, decrypted_file_name))
 
-    def test_trapdoor(self):
+    def test_single_trapdoor(self):
         """
         Trapdoor evaluation should return True
         """
         user = random.choice(self.users)
         assert user.client_id() == 1
 
+        m_peck = user.m_peck(['transfer'])
+        trapdoor = user.generate_trapdoor([0], ['transfer'])
+
+        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+
+        self.assertTrue(result)
+
+    def test_multiple_trapdoor(self):
+        """
+        Trapdoor evaluation should return true,
+        even if multiple keywords are used.
+        """
+        user = random.choice(self.users)
+        assert user.client_id() == 1
+
         m_peck = user.m_peck(['transfer', 'withdrawal', 'private'])
-        trapdoor = user.generate_trapdoor([0], ['transfer', 'withdrawal', 'private'])
+        trapdoor = user.generate_trapdoor([0, 2], ['transfer', 'withdrawal', 'private'])
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
@@ -111,8 +126,8 @@ class Test(unittest.TestCase):
         user = random.choice(self.users)
         assert user.client_id() == 1
 
-        m_peck = user.m_peck(['transfher', 'withdrawal', 'private'])
-        trapdoor = user.generate_trapdoor([0], ['transfer', 'withdrawal', 'private'])
+        m_peck = user.m_peck(['foobar'])
+        trapdoor = user.generate_trapdoor([0], ['boofar'])
 
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
