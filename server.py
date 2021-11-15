@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from Crypto.PublicKey import ElGamal
 from Crypto.Random import get_random_bytes
 from pypbc import *
@@ -5,6 +7,8 @@ from pypbc import *
 
 class Server:
     def __init__(self):
+        # Init data store
+        self.data = defaultdict(list)
         # Init key lists
         self.enc_keys = {}
         self.td_keys = {}
@@ -45,9 +49,29 @@ class Server:
         """Remember, user_id 0 is the consultant"""
         return self.td_keys[user_id]
 
-    def evaluate_trapdoor(self, trapdoor, user_id, m_peck):
+    def store_data(self, user_id, data):
         """
-        This method evaluates the given trapdoor.
+        Store data in local datastore.
+        Data is stored as:
+        {
+          user_id: [(sigma, m_peck), (sigma, m_peck), ...],
+          ...
+        }
+        """
+        self.data[0].append(data)  # Store separately for the consultant
+        self.data[user_id].append(data)
+
+    def evaluate_trapdoor(self, trapdoor, user_id):
+        data_list = self.data[user_id]
+        result = []
+        for (sigma, m_peck) in data_list:
+            if self.evaluate_trapdoor_single_mpeck(trapdoor, user_id, m_peck):
+                result.append(sigma)
+        return result
+
+    def evaluate_trapdoor_single_mpeck(self, trapdoor, user_id, m_peck):
+        """
+        This method evaluates the given trapdoor with a single m_peck.
         :return: True/False
         """
         tjq1, tjq2, tjq3, indices = trapdoor

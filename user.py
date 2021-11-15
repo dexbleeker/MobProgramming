@@ -8,8 +8,6 @@ class User:
     def __init__(self, server, client_id):
         self._cid = client_id
         self.server = server
-        # Init data store
-        data = {}
         # Init encryption keys
         self._enc_prime = server.enc_prime()
         self._enc_generator = server.enc_generator()
@@ -52,7 +50,7 @@ class User:
     def td_generator(self):
         """Trapdoor generator"""
         return self._td_generator
-    
+
     def td_pairing(self):
         """Trapdoor pairing"""
         return self._td_pairing
@@ -60,6 +58,15 @@ class User:
     def client_id(self):
         """The id of the client"""
         return self._cid
+
+    def send_data(self, data, keyword_set):
+        """
+        Store data in datastore of server.
+        """
+        encrypted_data = self.encrypt(message=data)
+        m_peck = self.m_peck(keyword_set)
+
+        self.server.store_data((encrypted_data, m_peck))
 
     def m_peck(self, keyword_set):
         h = [self.h1(x) for x in keyword_set]

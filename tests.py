@@ -66,6 +66,18 @@ class Test(unittest.TestCase):
         for u in self.users:
             self.assertNotEqual(u.client_id(), 0)
 
+    def test_data_storing(self):
+        """
+        Test whether storing/querying works.
+        """
+        user = random.choice(self.users)
+
+        sigma = user.encrypt(23)
+        m_peck = user.m_peck(["foobar"])
+        self.server.store_data(user.client_id(), (sigma, m_peck))
+
+        self.assertEqual(self.server.data[user.client_id()], [(sigma, m_peck)])
+
     def test_text_file(self):
         """
         Test whether encryption/decryption of a text file works correctly.
