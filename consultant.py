@@ -13,10 +13,8 @@ class Consultant(Client):
 
         user_public_key = self.server.user_enc_pub(user_id)
 
-        # x = random.randrange(start=1, stop=self.prime() - 1)
-        # y = random.randrange(start=1, stop=self.prime() - 1)
-        x = 4
-        y = 5
+        x = random.randrange(start=1, stop=self.prime() - 1)
+        y = random.randrange(start=1, stop=self.prime() - 1)
         u = pow(self.enc_generator(), x, self.prime())
 
         vs = []
