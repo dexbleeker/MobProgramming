@@ -10,19 +10,29 @@ class Server:
         # Init empty user (pk) dict
         self.users = {}
         # Init default encryption
-        key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
-        self.prime = int(key.p)
-        self.generator = key.g
+        _key = ElGamal.generate(bits=256, randfunc=get_random_bytes)
+        self._enc_prime = int(_key.p)
+        self._enc_generator = _key.g
         # Init trapdoor encryption
-        self.params = Parameters(qbits=512, rbits=160)
-        self.pairing = Pairing(self.params)
-        self.generator = Element.random(self.pairing, G1)
+        self._td_params = Parameters(qbits=512, rbits=160)
+        self._td_pairing = Pairing(self.params)
+        self._td_generator = Element.random(self.pairing, G1)
 
-    def prime(self):
-        return self.prime
+    def enc_prime(self):
+        """Prime for default encryption"""
+        return self._enc_prime
 
-    def generator(self):
-        return self.generator
+    def enc_generator(self):
+        """Generator for default encryption"""
+        return self._enc_generator
+
+    def td_generator(self):
+        """Generator for trapdoor encryption"""
+        return self._td_generator
+
+    def td_pairing(self):
+        """Pairing for trapdoor encryption"""
+        return self._td_pairing
 
     def register_user(self, client_id, public_key):
         self.users[client_id] = public_key

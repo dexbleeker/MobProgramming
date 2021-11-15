@@ -5,29 +5,33 @@ from pypbc import *
 
 class Client:
     def __init__(self, server, client_id):
-        self.__cid = client_id
+        self._cid = client_id
         self.server = server
-        self.pairing = server.pairing
-        self.generator = server.generator
-        self.prime = server.prime
-        self.__priv_key = Element.random(self.pairing, Zr)
-        self.__pub_key = Element(self.pairing, G1, value=self.generator ** self.__priv_key)
+        # Init encryption keys
+        self.enc_prime = server.enc_prime()
+        self._enc_priv_key = server._enc_prime
+        self._enc_pub_key = random.randrange(start=1, stop=self.enc_prime - 1)
+        # Init trapdoor encryption
+        self.pairing = server.td_pairing()
+        self.generator = server.td_generator()
+        self._td_priv_key = Element.random(self.pairing, Zr)
+        self._td_pub_key = Element(self.pairing, G1, value=self.generator ** self._td_priv_key)
         # Send public key to server
         server.register_user(self.client_id(), self.y_a())
         self.h1 = self.get_hash_function(self.pairing, hashlib.sha3_256)
         self.h2 = self.get_hash_function(self.pairing, hashlib.sha3_512)
 
     def x_a(self):
-        """Private key"""
-        return self.__priv_key
+        """Encryption private key"""
+        return self._td_priv_key
 
     def y_a(self):
-        """Public key"""
-        return self.__pub_key
+        """Encryption public key"""
+        return self._td_pub_key
 
     def client_id(self):
         """The id of the client"""
-        return self.__cid
+        return self._cid
 
     def m_peck(self, keyword_set):
         h = [self.h1(x) for x in keyword_set]
