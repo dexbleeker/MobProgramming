@@ -102,7 +102,7 @@ class Test(unittest.TestCase):
         sigma = self.consultant.encrypt(7945, user.user_id())
         m_peck = self.consultant.m_peck(["foobar"])
 
-        sigma2 = user.encrypt(7945, user.user_id())
+        sigma2 = user.encrypt(7945)
         m_peck2 = user.m_peck(["foobar"])
 
         print("SIGMA THE SAME?")
