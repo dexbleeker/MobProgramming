@@ -115,7 +115,6 @@ class Test(unittest.TestCase):
         self.assertEqual(len(result), 0)
         self.assertEqual(result, [])
 
-
     def test_text_file(self):
         """
         Test whether encryption/decryption of a text file works correctly.
