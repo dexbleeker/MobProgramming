@@ -68,7 +68,12 @@ class User:
 
         self.server.store_data((encrypted_data, m_peck))
 
-    def m_peck(self, keyword_set):
+    def m_peck(self, keyword_set, user_id=0):
+        if self.user_id() == 0:
+            keys = [self.server.user_td_pub(0), self.server.user_td_pub(user_id)]
+        else:
+            keys = [self.server.user_td_pub(0), self.td_pub_key()]
+
         h = [self.h1(x) for x in keyword_set]
         f = [self.h2(x) for x in keyword_set]
 
@@ -76,7 +81,7 @@ class User:
         r = Element.one(self.td_pairing(), Zr)
 
         a = self.td_generator() ** r
-        bs = [pow(key, s) for key in [self.server.user_td_pub(0), self.td_pub_key()]]
+        bs = [pow(key, s) for key in keys]
         cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
         return [a, bs, cs]
