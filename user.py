@@ -8,7 +8,7 @@ class User(Client):
         super().__init__(server, client_id)
 
     def encrypt(self, message, user_id=0):
-        consultant_public_key = self.server.user_public_key(user_id)
+        consultant_public_key = self.server.user_enc_pub(user_id)
 
         x = random.randrange(start=1, stop=self.prime() - 1)
         y = random.randrange(start=1, stop=self.prime() - 1)
