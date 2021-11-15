@@ -95,7 +95,7 @@ class Test(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], sigma)
 
-    def test_different_user_search(self):
+    def test_data_query_for_different_user(self):
         """
         Different user should NOT get a result when using the same keyword.
         """
