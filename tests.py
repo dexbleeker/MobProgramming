@@ -150,7 +150,7 @@ class Test(unittest.TestCase):
         m_peck = user.m_peck(['transfer'])
         trapdoor = user.generate_trapdoor([0], ['transfer'])
 
-        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
 
         self.assertTrue(result)
 
@@ -165,7 +165,7 @@ class Test(unittest.TestCase):
         m_peck = user.m_peck(['transfer', 'withdrawal', 'private'])
         trapdoor = user.generate_trapdoor([0, 2], ['transfer', 'withdrawal', 'private'])
 
-        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
 
         self.assertTrue(result)
 
@@ -179,7 +179,7 @@ class Test(unittest.TestCase):
         m_peck = user.m_peck(['foobar'])
         trapdoor = user.generate_trapdoor([0], ['boofar'])
 
-        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
 
         self.assertFalse(result)
 
