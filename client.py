@@ -1,124 +1,35 @@
-import hashlib
 import random
 
-from pypbc import *
+from user import User
 
 
-class Client:
+class Client(User):
     def __init__(self, server, client_id):
-        self._cid = client_id
-        self.server = server
-        # Init encryption keys
-        self._enc_prime = server.enc_prime()
-        self._enc_generator = server.enc_generator()
-        self._enc_priv_key = random.randrange(start=1, stop=self._enc_prime - 1)
-        self._enc_pub_key = pow(self._enc_generator, self.enc_priv_key(), self._enc_prime)
-        # Init trapdoor encryption
-        self._td_pairing = server.td_pairing()
-        self._td_generator = server.td_generator()
-        self._td_priv_key = Element.random(self._td_pairing, Zr)
-        self._td_pub_key = Element(self._td_pairing, G1, value=self._td_generator ** self._td_priv_key)
-        self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
-        self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
-        # Send public keys to server
-        server.register_user(self.client_id(), self.enc_pub_key(), self.td_pub_key())
-
-    def enc_priv_key(self):
-        """Encryption private key"""
-        return self._enc_priv_key
-
-    def enc_pub_key(self):
-        """Encryption public key"""
-        return self._enc_pub_key
-
-    def prime(self):
-        """Encryption prime"""
-        return self._enc_prime
-
-    def enc_generator(self):
-        """Encryption generator"""
-        return self._enc_generator
-
-    def td_priv_key(self):
-        """Trapdoor private key"""
-        return self._td_priv_key
-
-    def td_pub_key(self):
-        """Trapdoor public key"""
-        return self._td_pub_key
-
-    def td_generator(self):
-        """Trapdoor generator"""
-        return self._td_generator
-    
-    def td_pairing(self):
-        """Trapdoor pairing"""
-        return self._td_pairing
-
-    def client_id(self):
-        """The id of the client"""
-        return self._cid
-
-    def m_peck(self, keyword_set):
-        h = [self.h1(x) for x in keyword_set]
-        f = [self.h2(x) for x in keyword_set]
-
-        s = Element.random(self.td_pairing(), Zr)
-        r = Element.random(self.td_pairing(), Zr)
-
-        a = self.td_generator() ** r
-        bs = [pow(key, s) for key in [self.server.user_td_pub(0), self.td_pub_key()]]
-        cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
-
-        return [a, bs, cs]
-
-    def generate_trapdoor(self, indices, keyword_set):
-        t = Element.random(self.td_pairing(), Zr)
-
-        h = [self.h1(x) for x in keyword_set]
-        f = [self.h2(x) for x in keyword_set]
-
-        tjq1 = pow(self.td_generator(), t)
-
-        tjq2 = [pow(x, t) for x in h]
-
-        inverse = t.__ifloordiv__(self.td_priv_key())
-        tjq3 = [y ** inverse for y in f]
-        return [tjq1, tjq2, tjq3, indices]
+        super().__init__(server, client_id)
 
     def encrypt(self, message, user_id=0):
-        NotImplementedError("Class %s doesn't implement encrypt()" % self.__class__.__name__)
+        consultant_public_key = self.server.user_enc_pub(user_id)
 
-    def encrypt_file(self, filename, user_id=0):
-        f = open(filename, "rb")
+        x = random.randrange(start=1, stop=self.prime() - 1)
+        y = random.randrange(start=1, stop=self.prime() - 1)
+        u = pow(self.enc_generator(), x, self.prime())
 
-        message_bytes = []
-        while byte := f.read(1):
-            message_bytes.append(int.from_bytes(bytes=byte, byteorder='big', signed=False))
-        f.close()
+        vs = []
+        for key in [consultant_public_key, self.enc_pub_key()]:
+            v = pow(key * y % self.prime(), x, self.prime())
+            vs.append(v)
 
-        encrypted_bytes = []
-        for byte in message_bytes:
-            eb = self.encrypt(byte, user_id)
-            encrypted_bytes.append(eb)
+        c = (pow(y, x, self.prime()) * message) % self.prime()
 
-        return encrypted_bytes
+        return [c, u, *vs]
 
     def decrypt(self, sigma):
-        NotImplementedError("Class %s doesn't implement decrypt()" % self.__class__.__name__)
+        c = int(sigma[0])
+        u = int(sigma[1])
+        v = int(sigma[-1])
 
-    def decrypt_file(self, byte_array, filename="result.txt"):
-        decrypted_bytes = []
-        for byte in byte_array:
-            db = self.decrypt(byte)
-            decrypted_bytes.append(db)
+        divisor = int(pow(u, self.enc_priv_key(), self.prime()))
+        k = pow(divisor, -1, self.prime()) * v
 
-        result = open(filename, "wb")
-        result.write(bytes(bytearray(decrypted_bytes)))
-        result.close()
-
-        return filename
-
-    def get_hash_function(self, pairing, hash_function):
-        return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (
-            bytes, bytearray)) else Element.from_hash(pairing, G1, hash_function(text.encode()).digest())
+        m = pow(k, -1, self.prime()) * c % self.prime()
+        return m

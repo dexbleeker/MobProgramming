@@ -2,9 +2,9 @@ import filecmp
 import random
 import unittest
 
+from client import Client
 from consultant import Consultant
 from server import Server
-from user import User
 
 
 class Test(unittest.TestCase):
@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
         self.consultant = Consultant(self.server)
         self.users = []
         for client_id in range(1, random.randrange(4, 8)):
-            self.users.append(User(self.server, 1))
+            self.users.append(Client(self.server, 1))
 
     def test_user(self):
         """
@@ -51,6 +51,12 @@ class Test(unittest.TestCase):
         decrypted = user2.decrypt(sigma)
 
         self.assertNotEqual(message, decrypted)
+
+    def test_different_user_search(self):
+        """
+        Different user should NOT get a result when using the same keyword.
+        """
+        pass
 
     def test_ids(self):
         """
