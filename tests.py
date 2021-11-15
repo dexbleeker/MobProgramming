@@ -13,7 +13,7 @@ class Test(unittest.TestCase):
         self.consultant = Consultant(self.server)
         self.users = []
         for user_id in range(1, random.randrange(4, 8)):
-            self.users.append(Client(self.server, 1))
+            self.users.append(Client(self.server, user_id))
 
     def test_user(self):
         """
