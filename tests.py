@@ -12,9 +12,8 @@ class Test(unittest.TestCase):
         self.server = Server()
         self.consultant = Consultant(self.server)
         self.users = []
-        # TODO: Revert this change:
-        # for client_id in range(1, random.randrange(4, 8)):
-        self.users.append(User(self.server, 1))
+        for client_id in range(1, random.randrange(4, 8)):
+            self.users.append(User(self.server, 1))
 
     def test_user(self):
         """
@@ -38,7 +37,6 @@ class Test(unittest.TestCase):
 
         self.assertEqual(message, decrypted)
 
-    @unittest.skip("Skip for now.")
     def test_different_user(self):
         """
         Different user should NOT be able to decrypt users ciphertext
@@ -99,6 +97,20 @@ class Test(unittest.TestCase):
         result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
 
         self.assertTrue(result)
+
+    def test_invalid_trapdoor(self):
+        """
+        Trapdoor evaluation should return True
+        """
+        user = random.choice(self.users)
+        assert user.client_id() == 1
+
+        m_peck = user.m_peck(['transfher', 'withdrawal', 'private'])
+        trapdoor = user.generate_trapdoor([0], ['transfer', 'withdrawal', 'private'])
+
+        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':

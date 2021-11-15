@@ -1,76 +1,89 @@
-import mmh3
+import hashlib
+import random
+
+from pypbc import *
 
 
 class Client:
     def __init__(self, server, client_id):
-        self.__cid = client_id
+        self._cid = client_id
         self.server = server
-        self.prime = int(server.prime)
-        self.generator = server.generator
-        # self.__priv_key = random.randrange(start=1, stop=self.prime - 1)
-        self.__priv_key = 4
-        self.__pub_key = pow(self.generator, self.x_a(), self.prime)
-        # Send public key to server
-        server.register_user(self.client_id(), self.y_a())
+        # Init encryption keys
+        self._enc_prime = server.enc_prime()
+        self._enc_generator = server.enc_generator()
+        self._enc_priv_key = random.randrange(start=1, stop=self._enc_prime - 1)
+        self._enc_pub_key = pow(self._enc_generator, self.enc_priv_key(), self._enc_prime)
+        # Init trapdoor encryption
+        self._td_pairing = server.td_pairing()
+        self._td_generator = server.td_generator()
+        self._td_priv_key = Element.random(self._td_pairing, Zr)
+        self._td_pub_key = Element(self._td_pairing, G1, value=self._td_generator ** self._td_priv_key)
+        self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
+        self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
+        # Send public keys to server
+        server.register_user(self.client_id(), self.enc_pub_key(), self.td_pub_key())
 
-    def x_a(self):
-        """Private key"""
-        return self.__priv_key
+    def enc_priv_key(self):
+        """Encryption private key"""
+        return self._enc_priv_key
 
-    def y_a(self):
-        """Public key"""
-        return self.__pub_key
+    def enc_pub_key(self):
+        """Encryption public key"""
+        return self._enc_pub_key
+
+    def prime(self):
+        """Encryption prime"""
+        return self._enc_prime
+
+    def enc_generator(self):
+        """Encryption generator"""
+        return self._enc_generator
+
+    def td_priv_key(self):
+        """Trapdoor private key"""
+        return self._td_priv_key
+
+    def td_pub_key(self):
+        """Trapdoor public key"""
+        return self._td_pub_key
+
+    def td_generator(self):
+        """Trapdoor generator"""
+        return self._td_generator
+    
+    def td_pairing(self):
+        """Trapdoor pairing"""
+        return self._td_pairing
 
     def client_id(self):
         """The id of the client"""
-        return self.__cid
+        return self._cid
 
     def m_peck(self, keyword_set):
-        h = [mmh3.hash(x, 0, signed=False) % self.prime for x in keyword_set]
-        f = [mmh3.hash(x, 1, signed=False) % self.prime for x in keyword_set]
+        h = [self.h1(x) for x in keyword_set]
+        f = [self.h2(x) for x in keyword_set]
 
-        # print("mpeck h: {}".format(h))
-        # print("mpeck f: {}".format(f))
+        s = Element.random(self.td_pairing(), Zr)
+        r = Element.random(self.td_pairing(), Zr)
 
-        # s = random.randrange(start=1, stop=self.prime - 1)
-        # r = random.randrange(start=1, stop=self.prime - 1)
-        s = 4
-        r = 5
+        a = self.td_generator() ** r
+        bs = [pow(key, s) for key in [self.server.user_td_pub(0), self.td_pub_key()]]
+        cs = [pow(h[i], r) * pow(f[i], s) for i in range(len(h))]
 
-        a = pow(self.generator, r, self.prime)
-        bs = [pow(key, s, self.prime) for key in [self.server.user_public_key(0), self.y_a()]]
-        cs = [pow(h[i], r, self.prime) * pow(f[i], s, self.prime) for i in range(len(h))]
-
-        print("--------")
-        print("a: {}".format(a))
-        print("bs: {}".format(bs))
-        print("cs: {}".format(cs))
-        print("--------")
         return [a, bs, cs]
 
     def generate_trapdoor(self, indices, keyword_set):
-        # t = random.randrange(start=1, stop=self.prime - 1)
-        t = 8
+        t = Element.random(self.td_pairing(), Zr)
 
-        h = [mmh3.hash(keyword_set[x], 0, signed=False) % self.prime for x in indices]
-        f = [mmh3.hash(keyword_set[x], 1, signed=False) % self.prime for x in indices]
+        h = [self.h1(x) for x in keyword_set]
+        f = [self.h2(x) for x in keyword_set]
 
-        # print("mpeck h: {}".format(h))
-        # print("mpeck f: {}".format(f))
+        tjq1 = pow(self.td_generator(), t)
 
-        tjq1 = pow(self.generator, t, self.prime)
-        print("tjq1: {}".format(tjq1))
+        tjq2 = [pow(x, t) for x in h]
 
-        tjq2 = [pow(x, t, self.prime) for x in h]
-        print("tjq2: {}".format(tjq2))
-
-        inverse = pow(self.x_a(), -1, self.prime)
-        print("Inverse: {}".format(inverse))
-        tjq3 = [pow(y, inverse * t, self.prime) for y in f]
-        print("tjq3: {}".format(tjq3))
-
-        print("indices: {}".format(indices))
-
+        inverse = t.__ifloordiv__(self.td_priv_key())
+        tjq3 = [y ** inverse for y in f]
         return [tjq1, tjq2, tjq3, indices]
 
     def encrypt(self, message, user_id=0):
@@ -105,3 +118,7 @@ class Client:
         result.close()
 
         return filename
+
+    def get_hash_function(self, pairing, hash_function):
+        return lambda text: Element.from_hash(pairing, G1, hash_function(text).digest()) if isinstance(text, (
+            bytes, bytearray)) else Element.from_hash(pairing, G1, hash_function(text.encode()).digest())
