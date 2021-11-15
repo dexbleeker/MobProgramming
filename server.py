@@ -84,6 +84,11 @@ class Server:
         # element from bs later
         uid = 1 if user_id != 0 else 0
 
+        # Return False if there are more keywords 'needed' than included in the m_peck.
+        # We can only return True if ALL keywords are present.
+        if max(indices) > len(cs):
+            return False
+
         e = lambda e1, e2: self.td_pairing().apply(e1, e2)
 
         left = Element.one(self.td_pairing(), G1)
