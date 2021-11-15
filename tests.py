@@ -12,7 +12,7 @@ class Test(unittest.TestCase):
         self.server = Server()
         self.consultant = Consultant(self.server)
         self.users = []
-        for client_id in range(1, random.randrange(4, 8)):
+        for user_id in range(1, random.randrange(4, 8)):
             self.users.append(Client(self.server, 1))
 
     def test_user(self):
@@ -52,19 +52,68 @@ class Test(unittest.TestCase):
 
         self.assertNotEqual(message, decrypted)
 
-    def test_different_user_search(self):
-        """
-        Different user should NOT get a result when using the same keyword.
-        """
-        pass
-
     def test_ids(self):
         """
         Consultant id should be 0 and user ids should not be 0
         """
-        self.assertEqual(self.consultant.client_id(), 0)
+        self.assertEqual(self.consultant.user_id(), 0)
         for u in self.users:
-            self.assertNotEqual(u.client_id(), 0)
+            self.assertNotEqual(u.user_id(), 0)
+
+    def test_data_storing(self):
+        """
+        Test whether storing works.
+        """
+        user = random.choice(self.users)
+
+        sigma = user.encrypt(23)
+        m_peck = user.m_peck(["foobar"])
+        self.server.store_data(user.user_id(), (sigma, m_peck))
+
+        self.assertEqual(self.server.data[user.user_id()], [(sigma, m_peck)])
+
+    def test_data_querying(self):
+        """
+        Test whether querying works.
+        """
+        user = random.choice(self.users)
+
+        sigma = user.encrypt(9511)
+        m_peck = user.m_peck(["foobar"])
+        self.server.store_data(user.user_id(), (sigma, m_peck))
+
+        # Test trapdoor that should return nothing
+        trapdoor = user.generate_trapdoor([0, 1], ["foobar", "barfoo"])
+        result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
+
+        self.assertEqual(len(result), 0)
+        self.assertEqual(result, [])
+
+        # Test trapdoor that should return single sigma
+        trapdoor = user.generate_trapdoor([0], ["foobar"])
+        result = self.server.evaluate_trapdoor(trapdoor, user.user_id())
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0], sigma)
+
+    def test_data_query_for_different_user(self):
+        """
+        Different user should NOT get a result when using the same keyword.
+        """
+        user1 = random.choice(self.users)
+        user2 = random.choice(self.users)
+        while user1 == user2:
+            user2 = random.choice(self.users)
+
+        # Let user1 store some data
+        sigma = user1.encrypt(5624)
+        m_peck = user1.m_peck(["foobar"])
+        self.server.store_data(user1.user_id(), (sigma, m_peck))
+
+        # Make sure user2 cannot query that data
+        trapdoor = user2.generate_trapdoor([0], ["foobar"])
+        result = self.server.evaluate_trapdoor(trapdoor, user2.user_id())
+        self.assertEqual(len(result), 0)
+        self.assertEqual(result, [])
 
     def test_text_file(self):
         """
@@ -95,12 +144,12 @@ class Test(unittest.TestCase):
         Trapdoor evaluation should return True
         """
         user = random.choice(self.users)
-        assert user.client_id() == 1
+        assert user.user_id() == 1
 
         m_peck = user.m_peck(['transfer'])
         trapdoor = user.generate_trapdoor([0], ['transfer'])
 
-        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
 
         self.assertTrue(result)
 
@@ -110,12 +159,12 @@ class Test(unittest.TestCase):
         even if multiple keywords are used.
         """
         user = random.choice(self.users)
-        assert user.client_id() == 1
+        assert user.user_id() == 1
 
         m_peck = user.m_peck(['transfer', 'withdrawal', 'private'])
         trapdoor = user.generate_trapdoor([0, 2], ['transfer', 'withdrawal', 'private'])
 
-        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
 
         self.assertTrue(result)
 
@@ -124,12 +173,12 @@ class Test(unittest.TestCase):
         Trapdoor evaluation should return True
         """
         user = random.choice(self.users)
-        assert user.client_id() == 1
+        assert user.user_id() == 1
 
         m_peck = user.m_peck(['foobar'])
         trapdoor = user.generate_trapdoor([0], ['boofar'])
 
-        result = self.server.evaluate_trapdoor(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
 
         self.assertFalse(result)
 

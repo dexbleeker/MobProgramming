@@ -4,8 +4,8 @@ from user import User
 
 
 class Client(User):
-    def __init__(self, server, client_id):
-        super().__init__(server, client_id)
+    def __init__(self, server, user_id):
+        super().__init__(server, user_id)
 
     def encrypt(self, message, user_id=0):
         consultant_public_key = self.server.user_enc_pub(user_id)

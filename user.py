@@ -5,11 +5,9 @@ from pypbc import *
 
 
 class User:
-    def __init__(self, server, client_id):
-        self._cid = client_id
+    def __init__(self, server, user_id):
+        self._cid = user_id
         self.server = server
-        # Init data store
-        data = {}
         # Init encryption keys
         self._enc_prime = server.enc_prime()
         self._enc_generator = server.enc_generator()
@@ -23,7 +21,7 @@ class User:
         self.h1 = self.get_hash_function(self._td_pairing, hashlib.sha3_256)
         self.h2 = self.get_hash_function(self._td_pairing, hashlib.sha3_512)
         # Send public keys to server
-        server.register_user(self.client_id(), self.enc_pub_key(), self.td_pub_key())
+        server.register_user(self.user_id(), self.enc_pub_key(), self.td_pub_key())
 
     def enc_priv_key(self):
         """Encryption private key"""
@@ -52,14 +50,23 @@ class User:
     def td_generator(self):
         """Trapdoor generator"""
         return self._td_generator
-    
+
     def td_pairing(self):
         """Trapdoor pairing"""
         return self._td_pairing
 
-    def client_id(self):
+    def user_id(self):
         """The id of the client"""
         return self._cid
+
+    def send_data(self, data, keyword_set):
+        """
+        Store data in datastore of server.
+        """
+        encrypted_data = self.encrypt(message=data)
+        m_peck = self.m_peck(keyword_set)
+
+        self.server.store_data((encrypted_data, m_peck))
 
     def m_peck(self, keyword_set):
         h = [self.h1(x) for x in keyword_set]
