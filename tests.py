@@ -99,7 +99,22 @@ class Test(unittest.TestCase):
         """
         Different user should NOT get a result when using the same keyword.
         """
-        pass
+        user1 = random.choice(self.users)
+        user2 = random.choice(self.users)
+        while user1 == user2:
+            user2 = random.choice(self.users)
+
+        # Let user1 store some data
+        sigma = user1.encrypt(5624)
+        m_peck = user1.m_peck(["foobar"])
+        self.server.store_data(user1.user_id(), (sigma, m_peck))
+
+        # Make sure user2 cannot query that data
+        trapdoor = user2.generate_trapdoor([0], ["foobar"])
+        result = self.server.evaluate_trapdoor(trapdoor, user2.user_id())
+        self.assertEqual(len(result), 0)
+        self.assertEqual(result, [])
+
 
     def test_text_file(self):
         """
