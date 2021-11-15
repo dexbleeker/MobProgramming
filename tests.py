@@ -218,12 +218,11 @@ class Test(unittest.TestCase):
         Trapdoor evaluation should return True.
         """
         user = random.choice(self.users)
-        assert user.user_id() == 1
 
         m_peck = user.m_peck(['transfer'])
         trapdoor = user.generate_trapdoor([0], ['transfer'])
 
-        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, user.user_id(), m_peck)
 
         self.assertTrue(result)
 
@@ -232,12 +231,11 @@ class Test(unittest.TestCase):
         Trapdoor evaluation should return True, even if multiple keywords are used.
         """
         user = random.choice(self.users)
-        assert user.user_id() == 1
 
         m_peck = user.m_peck(['transfer', 'withdrawal', 'private'])
         trapdoor = user.generate_trapdoor([0, 2], ['transfer', 'withdrawal', 'private'])
 
-        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, user.user_id(), m_peck)
 
         self.assertTrue(result)
 
@@ -246,12 +244,11 @@ class Test(unittest.TestCase):
         Trapdoor evaluation should return False.
         """
         user = random.choice(self.users)
-        assert user.user_id() == 1
 
         m_peck = user.m_peck(['foobar'])
         trapdoor = user.generate_trapdoor([0], ['boofar'])
 
-        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, 1, m_peck)
+        result = self.server.evaluate_trapdoor_single_mpeck(trapdoor, user.user_id(), m_peck)
 
         self.assertFalse(result)
 
