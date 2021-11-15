@@ -37,9 +37,9 @@ class Server:
         """Pairing for trapdoor encryption"""
         return self._td_pairing
 
-    def register_user(self, client_id, enc_pub_key, td_pub_key):
-        self.enc_keys[client_id] = enc_pub_key
-        self.td_keys[client_id] = td_pub_key
+    def register_user(self, user_id, enc_pub_key, td_pub_key):
+        self.enc_keys[user_id] = enc_pub_key
+        self.td_keys[user_id] = td_pub_key
 
     def user_enc_pub(self, user_id):
         """Remember, user_id 0 is the consultant"""
@@ -62,6 +62,9 @@ class Server:
         self.data[user_id].append(data)
 
     def evaluate_trapdoor(self, trapdoor, user_id):
+        """
+        :return: List of sigma's for which the trapdoor was true
+        """
         data_list = self.data[user_id]
         result = []
         for (sigma, m_peck) in data_list:
